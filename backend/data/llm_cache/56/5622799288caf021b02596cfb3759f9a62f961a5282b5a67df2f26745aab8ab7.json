@@ -1,0 +1,31 @@
+{
+  "key": "5622799288caf021b02596cfb3759f9a62f961a5282b5a67df2f26745aab8ab7",
+  "created_at": "2026-10-24T17:58:53+00:00",
+  "prompt_preview": "SME PROFILE: {\"product_category\":\"industrial_sensors\",\"business_model\":\"B2B\",\"budget_usd\":100000.0,\"priority_weights\":{}}\nSTATE: Maharashtra (opportunity score ",
+  "response": {
+    "ja": {
+      "market_summary": "Tamil Nadu [states_scores_comparison.csv#Tamil Nadu]",
+      "target_customers": [
+        "Auto"
+      ],
+      "competitors": [
+        "None"
+      ],
+      "risks": [
+        "Logistics"
+      ]
+    },
+    "en": {
+      "market_summary": "Tamil Nadu [states_scores_comparison.csv#Tamil Nadu]",
+      "target_customers": [
+        "Auto"
+      ],
+      "competitors": [
+        "None"
+      ],
+      "risks": [
+        "Logistics"
+      ]
+    }
+  }
+}

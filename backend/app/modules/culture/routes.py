@@ -19,10 +19,5 @@ def phrase_check(req: PhraseCheckRequest):
 
 
 @router.post("/coach", response_model=CoachResponse)
-async def coach(req: CoachRequest):
-    try:
-        return await coach_mod.coach(req)
-    except llm.LLMUnavailable as e:
-        raise HTTPException(503, str(e))
-    except Exception as e:
-        raise HTTPException(502, f"LLM error: {e}")
+def coach(req: CoachRequest):
+    return coach_mod.coach(req=req)

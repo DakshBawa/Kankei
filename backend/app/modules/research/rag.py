@@ -1,10 +1,10 @@
-"""Minimal RAG: TF-IDF retrieval over (a) one synthesised chunk per state built from
-states_scores_comparison.csv and (b) any .md/.txt files dropped into data/docs/.
-Swap `Retriever` internals for embeddings / a vector DB later; the interface stays the same."""
+import os
 import re
 from dataclasses import dataclass
 from functools import lru_cache
+from typing import Optional
 
+import yaml
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -20,11 +20,31 @@ class Chunk:
     chunk_id: str  # "<source>#<n or state>"
     source: str
     text: str
+    title: str = ""
+    source_url: str = ""
+    last_verified: str = "UNVERIFIED"
+    status: str = "starter-summary"
+    authority: str = ""
     score: float = 0.0
 
     @property
     def is_state_chunk(self) -> bool:
         return self.source == STATE_SOURCE
+
+    @property
+    def unverified(self) -> bool:
+        return self.status == "starter-summary" or self.last_verified == "UNVERIFIED"
+
+
+def _parse_front_matter(content: str) -> tuple[dict, str]:
+    match = re.match(r"^---\s*\n(.*?)\n---\s*\n(.*)$", content, re.DOTALL)
+    if not match:
+        return {}, content
+    try:
+        meta = yaml.safe_load(match.group(1)) or {}
+    except Exception:
+        meta = {}
+    return meta, match.group(2)
 
 
 def _chunk_text(text: str, max_chars: int = 900) -> list[str]:
@@ -60,12 +80,66 @@ class Retriever:
     def __init__(self) -> None:
         self.chunks: list[Chunk] = []
         for state, row in load_states().iterrows():
-            self.chunks.append(Chunk(f"{STATE_SOURCE}#{state}", STATE_SOURCE, _state_text(state, row)))
-        for path in sorted((DATA_DIR / "docs").glob("*")):
-            if path.suffix.lower() not in {".md", ".txt"}:
-                continue
-            for i, c in enumerate(_chunk_text(path.read_text(encoding="utf-8"))):
-                self.chunks.append(Chunk(f"{path.name}#{i}", path.name, c))
+            self.chunks.append(
+                Chunk(
+                    f"{STATE_SOURCE}#{state}",
+                    STATE_SOURCE,
+                    _state_text(state, row),
+                    title=f"State Profile: {state}",
+                    source_url="",
+                    last_verified=str(row["last_verified"]),
+                    status="official",
+                )
+            )
+
+        # 1. Load corpus/*.md files (16 seeded documents)
+        corpus_dir = DATA_DIR / "corpus"
+        if corpus_dir.exists():
+            for path in sorted(corpus_dir.glob("*.md")):
+                meta, body = _parse_front_matter(path.read_text(encoding="utf-8"))
+                doc_id = meta.get("id", path.stem)
+                title = meta.get("title", doc_id)
+                source_url = meta.get("source_url", "")
+                last_verified = meta.get("last_verified", "UNVERIFIED")
+                status = meta.get("status", "starter-summary")
+                authority = meta.get("authority", "")
+
+                for i, c in enumerate(_chunk_text(body), start=1):
+                    self.chunks.append(
+                        Chunk(
+                            chunk_id=f"{doc_id}#{i}",
+                            source=doc_id,
+                            text=c,
+                            title=title,
+                            source_url=source_url,
+                            last_verified=last_verified,
+                            status=status,
+                            authority=authority,
+                        )
+                    )
+
+        # 2. Also load docs/* if present
+        docs_dir = DATA_DIR / "docs"
+        if docs_dir.exists():
+            for path in sorted(docs_dir.glob("*")):
+                if path.suffix.lower() not in {".md", ".txt"}:
+                    continue
+                meta, body = _parse_front_matter(path.read_text(encoding="utf-8"))
+                doc_id = meta.get("id", path.stem)
+                for i, c in enumerate(_chunk_text(body), start=1):
+                    self.chunks.append(
+                        Chunk(
+                            chunk_id=f"{doc_id}#{i}",
+                            source=doc_id,
+                            text=c,
+                            title=meta.get("title", doc_id),
+                            source_url=meta.get("source_url", ""),
+                            last_verified=meta.get("last_verified", "UNVERIFIED"),
+                            status=meta.get("status", "starter-summary"),
+                            authority=meta.get("authority", ""),
+                        )
+                    )
+
         self.vec = TfidfVectorizer(stop_words="english", ngram_range=(1, 2))
         self.matrix = self.vec.fit_transform([c.text for c in self.chunks])
 
@@ -77,7 +151,17 @@ class Retriever:
         sims = cosine_similarity(self.vec.transform([query]), self.matrix).ravel()
         top = sims.argsort()[::-1][:k]
         return [
-            Chunk(self.chunks[i].chunk_id, self.chunks[i].source, self.chunks[i].text, float(sims[i]))
+            Chunk(
+                chunk_id=self.chunks[i].chunk_id,
+                source=self.chunks[i].source,
+                text=self.chunks[i].text,
+                title=self.chunks[i].title,
+                source_url=self.chunks[i].source_url,
+                last_verified=self.chunks[i].last_verified,
+                status=self.chunks[i].status,
+                authority=self.chunks[i].authority,
+                score=float(sims[i]),
+            )
             for i in top
             if sims[i] >= MIN_SIMILARITY
         ]

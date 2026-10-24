@@ -62,3 +62,34 @@ def evaluate(req: ChecklistRequest) -> ChecklistResponse:
         ))
     items.sort(key=lambda i: (PHASE_ORDER[i.phase], i.applicability != "applies"))
     return ChecklistResponse(rules_status=data["status"], items=items)
+
+
+def build_roadmap(profile: dict | Any) -> ChecklistResponse:
+    from app.schemas import ChecklistRequest
+    if isinstance(profile, dict):
+        cat = profile.get("product_category", "industrial_sensors")
+        if cat == "sensors":
+            cat = "industrial_sensors"
+        intent = profile.get("ownership_intent", "distributor_first")
+        if "distributor" in intent or profile.get("route") == "import":
+            model = "export_via_distributor"
+        elif "jv" in intent or "joint" in intent:
+            model = "joint_venture"
+        elif "subsidiary" in intent or "wholly" in intent:
+            model = "wholly_owned_subsidiary"
+        else:
+            model = "export_via_distributor"
+        req = ChecklistRequest(
+            entry_model=model,
+            product_category=cat if cat in ("industrial_sensors", "auto_components", "consumer_goods", "general") else "industrial_sensors",
+            business_model=profile.get("customer_type", "B2B"),
+            has_wireless=profile.get("has_wireless", False),
+            sold_prepackaged_retail=profile.get("sold_prepackaged_retail", False),
+        )
+    else:
+        req = ChecklistRequest(
+            entry_model="export_via_distributor",
+            product_category=getattr(profile, "product_category", "industrial_sensors"),
+            business_model=getattr(profile, "business_model", "B2B"),
+        )
+    return evaluate(req)

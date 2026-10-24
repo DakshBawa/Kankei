@@ -1,18 +1,20 @@
 """LLM routes with the model mocked - checks prompt wiring, parsing and citation filtering."""
+import json
 from app import llm
 
 CONTENT = {"market_summary": "Strong cluster [states_scores_comparison.csv#Tamil Nadu] and a fake cite [nope.md#9].",
            "target_customers": ["Tier-1 auto suppliers"], "competitors": ["Not in corpus"], "risks": ["Power"]}
 
 
-def test_brief_with_mocked_llm(client, monkeypatch):
+def test_brief_with_mocked_llm(client, monkeypatch, tmp_path):
+    monkeypatch.setenv("LLM_CACHE_DIR", str(tmp_path / "cache"))
     seen = {}
 
-    async def fake_json(system, user, max_tokens=3000):
-        seen["user"] = user
-        return {"ja": CONTENT, "en": CONTENT}
+    def fake_call(system, prompt, schema):
+        seen["user"] = prompt
+        return json.dumps({"ja": CONTENT, "en": CONTENT})
 
-    monkeypatch.setattr(llm, "complete_json", fake_json)
+    monkeypatch.setattr(llm, "_call_provider", fake_call)
     r = client.post("/research/brief", json={"profile": {"product_category": "industrial_sensors",
                     "budget_usd": 250000}, "state": "Tamil Nadu"})
     assert r.status_code == 200
@@ -27,22 +29,23 @@ def test_brief_with_mocked_llm(client, monkeypatch):
 
 
 def test_ask_with_mocked_llm(client, monkeypatch):
-    async def fake(system, user, max_tokens=1500, temperature=0.2):
+    def fake_call(system, prompt, schema):
         return "Maharashtra has 810 Japanese companies [states_scores_comparison.csv#Maharashtra]."
 
-    monkeypatch.setattr(llm, "complete", fake)
+    monkeypatch.setattr(llm, "_call_provider", fake_call)
     j = client.post("/research/ask", json={"question": "How many Japanese companies are in Maharashtra?",
                                            "state": "Maharashtra"}).json()
     assert j["grounded"] and j["citations"][0]["chunk_id"].endswith("#Maharashtra")
 
 
 def test_coach_with_mocked_llm(client, monkeypatch):
-    async def fake_json(system, user, max_tokens=3000):
-        assert "KNOWN PHRASE HITS" in user and "Ringi" in user  # playbook is in the prompt
-        return {"risks": [{"dimension": "Response & Agreement Signals", "issue": "x", "why": "y"}],
-                "rewritten_message": "Please confirm in writing whether the scope is agreed.",
-                "delivery_tips": ["Follow up in a 1-on-1"]}
+    def fake_call(system, prompt, schema):
+        return json.dumps({
+            "risks": [{"dimension": "Response & Agreement Signals", "issue": "x", "why": "y"}],
+            "rewritten_message": "Please confirm in writing whether the scope is agreed.",
+            "delivery_tips": ["Follow up in a 1-on-1"],
+        })
 
-    monkeypatch.setattr(llm, "complete_json", fake_json)
+    monkeypatch.setattr(llm, "_call_provider", fake_call)
     j = client.post("/culture/coach", json={"message": "We will consider it.", "direction": "ja_to_in"}).json()
     assert j["phrase_hits"] and j["risks"][0]["dimension"].startswith("Response")

@@ -1,7 +1,6 @@
-// Browser calls /api/* on this app; Next proxies it to your backend (no CORS setup needed).
-const BACKEND = process.env.BACKEND_URL || "http://localhost:5000";
+const BACKEND = process.env.NEXT_PUBLIC_API_URL || process.env.BACKEND_URL || "http://localhost:8000";
 export default {
   async rewrites() {
-    return [{ source: "/api/:path*", destination: `${BACKEND}/api/:path*` }];
+    return [{ source: "/api/:path*", destination: `${BACKEND}/:path*` }];
   },
 };

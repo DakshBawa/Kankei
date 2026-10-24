@@ -17,4 +17,7 @@ def test_phrase_check_aliases_and_japanese_script(client):
 
 
 def test_coach_needs_llm(client):
-    assert client.post("/culture/coach", json={"message": "We will consider it."}).status_code == 503
+    # Fix 2: coach provides a deterministic fallback so it works without LLM
+    r = client.post("/culture/coach", json={"message": "We will consider it."})
+    assert r.status_code == 200
+    assert r.json()["rewritten_message"]

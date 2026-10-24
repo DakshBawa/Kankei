@@ -1,0 +1,31 @@
+{
+  "key": "cecb730297546a077ee836ff23c395b43ae9702a3b3959599b8a7d362f201167",
+  "created_at": "2026-10-24T17:55:39+00:00",
+  "prompt_preview": "SME PROFILE: {\"product_category\":\"general\",\"business_model\":\"B2B\",\"budget_usd\":1.0,\"priority_weights\":{}}\nSTATE: Gujarat (opportunity score 78.9/100, rank 1 of ",
+  "response": {
+    "ja": {
+      "market_summary": "Strong cluster [states_scores_comparison.csv#Tamil Nadu] and a fake cite [nope.md#9].",
+      "target_customers": [
+        "Tier-1 auto suppliers"
+      ],
+      "competitors": [
+        "Not in corpus"
+      ],
+      "risks": [
+        "Power"
+      ]
+    },
+    "en": {
+      "market_summary": "Strong cluster [states_scores_comparison.csv#Tamil Nadu] and a fake cite [nope.md#9].",
+      "target_customers": [
+        "Tier-1 auto suppliers"
+      ],
+      "competitors": [
+        "Not in corpus"
+      ],
+      "risks": [
+        "Power"
+      ]
+    }
+  }
+}

@@ -52,3 +52,26 @@ def reasons(components: list[ScoreComponent]) -> list[str]:
             out.append({"sector": "Sector match", "state": "Strong state", "language": "Language fit",
                         "japan_experience": "Japan-client experience"}[c.name] + f": {c.note}")
     return out[:3]
+
+
+def search_partners(profile: dict | SMEProfile, preferred_state: str | None = None, top_n: int = 5):
+    from app.modules.match import routes
+    from app.schemas import MatchRequest, SMEProfile
+    if isinstance(profile, dict):
+        cat = profile.get("product_category", "industrial_sensors")
+        if cat == "sensors":
+            cat = "industrial_sensors"
+        b_usd = profile.get("budget_usd") or (profile.get("budget_jpy", 5_000_000) / 150.0)
+        p = SMEProfile(
+            product_category=cat if cat in ("industrial_sensors", "auto_components", "consumer_goods", "general") else "industrial_sensors",
+            business_model=profile.get("customer_type", "B2B"),
+            budget_usd=max(1000.0, float(b_usd)),
+            priority_weights=profile.get("weights") or {},
+        )
+    else:
+        p = profile
+
+    states = [preferred_state] if preferred_state else []
+    req = MatchRequest(profile=p, states=states)
+    resp = routes.rank_partners(req)
+    return resp.results[:top_n]

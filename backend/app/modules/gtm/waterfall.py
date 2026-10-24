@@ -67,3 +67,21 @@ def build(req: PriceWaterfallRequest) -> PriceWaterfallResponse:
             "Currency conversion uses the fx_to_inr you supplied; no live rates are fetched.",
         ],
     )
+
+
+def compute_waterfall(profile: dict | PriceWaterfallRequest) -> PriceWaterfallResponse:
+    if isinstance(profile, dict):
+        unit_p = profile.get("unit_price_jpy") or profile.get("unit_price", 10_000)
+        curr = profile.get("currency", "JPY")
+        fx = profile.get("fx_to_inr", 0.55 if curr == "JPY" else (83.0 if curr == "USD" else 1.0))
+        hs = profile.get("hs_code", "90318000")  # Default to industrial sensor HS code
+        req = PriceWaterfallRequest(
+            hs_code=hs,
+            unit_price=float(unit_p),
+            currency=curr,
+            fx_to_inr=fx,
+            business_model=profile.get("customer_type", "B2B"),
+        )
+    else:
+        req = profile
+    return build(req)

@@ -1,0 +1,145 @@
+{
+  "_meta": {
+    "purpose": "Context for the culture coach. These are common tendencies, not rules about any individual.",
+    "required_fields": ["pattern", "literal", "likely_read_by_indian_partner", "actual_intent", "coaching", "rewrite_en"],
+    "note": "IN_to_JP entries use likely_read_by_japanese_partner instead of likely_read_by_indian_partner.",
+    "status": "Team-authored starter set. Have a Japan-India business practitioner review before external use."
+  },
+  "entries": [
+    {
+      "id": "jp-01", "direction": "JP_to_IN", "risk_level": "high",
+      "pattern": "前向きに検討します",
+      "literal": "We will consider it positively.",
+      "likely_read_by_indian_partner": "A positive signal, close to a yes: the deal is moving forward.",
+      "actual_intent": "Polite acknowledgement. Often a deferral and sometimes a soft no; the real answer depends on internal approval.",
+      "coaching": "Say what is being decided, by whom, and by when. Ask for the one thing that would help the decision.",
+      "rewrite_en": "We will review this internally and confirm our decision by [date]. To help us decide, could you send [document] by [date]?"
+    },
+    {
+      "id": "jp-02", "direction": "JP_to_IN", "risk_level": "high",
+      "pattern": "善処します",
+      "literal": "I will handle it appropriately / do what I can.",
+      "likely_read_by_indian_partner": "A promise that the problem will be fixed.",
+      "actual_intent": "A promise of effort with no guaranteed result. Frequently used when the speaker cannot commit.",
+      "coaching": "Replace with a concrete action, an owner and a date, and say what happens if it cannot be done.",
+      "rewrite_en": "We will [specific action] by [date]. If we cannot, we will tell you by [date] and propose an alternative."
+    },
+    {
+      "id": "jp-03", "direction": "JP_to_IN", "risk_level": "high",
+      "pattern": "難しいですね",
+      "literal": "That is difficult, isn't it.",
+      "likely_read_by_indian_partner": "A hurdle to be negotiated; keep pushing or offer more and it may become possible.",
+      "actual_intent": "Usually a refusal, expressed indirectly to avoid a direct 'no'.",
+      "coaching": "State the decision plainly and offer what you can do instead, so the partner does not keep negotiating a closed door.",
+      "rewrite_en": "We are not able to accept this condition. We could consider [alternative] instead. Would that work for you?"
+    },
+    {
+      "id": "jp-04", "direction": "JP_to_IN", "risk_level": "medium",
+      "pattern": "検討します",
+      "literal": "We will consider it.",
+      "likely_read_by_indian_partner": "They are weighing it and will come back with an answer soon.",
+      "actual_intent": "No commitment. It may mean the proposal is unlikely to proceed, or that consensus has not formed yet.",
+      "coaching": "Give a realistic timeline and name the next step, so silence is not misread as agreement or rejection.",
+      "rewrite_en": "We need time to review this internally. You can expect our reply by [date]."
+    },
+    {
+      "id": "jp-05", "direction": "JP_to_IN", "risk_level": "medium",
+      "pattern": "持ち帰って確認します",
+      "literal": "I will take this back and check.",
+      "likely_read_by_indian_partner": "A quick check; the person present will answer within a day or two.",
+      "actual_intent": "The attendee usually cannot decide alone. The proposal goes through internal consensus-building (nemawashi / ringi), which can take weeks.",
+      "coaching": "Explain the approval steps and how long they typically take, and ask who else should be briefed.",
+      "rewrite_en": "I need approval from [team/role]. Our process usually takes [N] days, so we will reply by [date]. Is there anyone else you would like us to brief?"
+    },
+    {
+      "id": "jp-06", "direction": "JP_to_IN", "risk_level": "medium",
+      "pattern": "少し考えさせてください",
+      "literal": "Please let me think about it for a little while.",
+      "likely_read_by_indian_partner": "A short pause before a yes.",
+      "actual_intent": "May be hesitation or a polite no. A real yes is usually accompanied by specific next steps.",
+      "coaching": "Name the concern behind the pause and set a follow-up date so the partner is not left guessing.",
+      "rewrite_en": "I have a concern about [issue]. Could we discuss it on [date], after we check [item]?"
+    },
+    {
+      "id": "jp-07", "direction": "JP_to_IN", "risk_level": "medium",
+      "pattern": "ちょっと厳しいかもしれません",
+      "literal": "It might be a little tough.",
+      "likely_read_by_indian_partner": "Challenging but still achievable with effort.",
+      "actual_intent": "Typically a refusal softened by 'maybe' and 'a little'.",
+      "coaching": "If it is a no, say no and why. If it is conditional, name the condition.",
+      "rewrite_en": "We cannot meet [requirement] under the current terms. We could do it if [condition]."
+    },
+    {
+      "id": "jp-08", "direction": "JP_to_IN", "risk_level": "medium",
+      "pattern": "大丈夫です",
+      "literal": "It's fine / I'm okay.",
+      "likely_read_by_indian_partner": "Yes, approved.",
+      "actual_intent": "Ambiguous. Can mean 'yes, that works' or 'no thank you, I don't need it'.",
+      "coaching": "Use an explicit yes or no, and restate what is being agreed or declined.",
+      "rewrite_en": "Yes, that works for us. / No, thank you, we do not need that."
+    },
+    {
+      "id": "jp-09", "direction": "JP_to_IN", "risk_level": "medium",
+      "pattern": "特に問題ありません",
+      "literal": "There are no particular problems.",
+      "likely_read_by_indian_partner": "Formal approval of the proposal or draft.",
+      "actual_intent": "No objections were raised in the meeting. It is not necessarily an approval, and concerns may surface later.",
+      "coaching": "Ask for written confirmation of what has been approved and list any open points.",
+      "rewrite_en": "We have no objections to [items] so far. Open points: [list]. We will confirm formal approval by [date]."
+    },
+    {
+      "id": "jp-10", "direction": "JP_to_IN", "risk_level": "medium",
+      "pattern": "はい、はい",
+      "literal": "Yes, yes.",
+      "likely_read_by_indian_partner": "Agreement with what was just said.",
+      "actual_intent": "Often only 'I am listening and following', not 'I agree'.",
+      "coaching": "Do not treat in-meeting nods and 'hai' as consent. Close each point with a written summary.",
+      "rewrite_en": "To confirm, we have agreed on [point 1] and [point 2]. Is that correct?"
+    },
+    {
+      "id": "jp-11", "direction": "JP_to_IN", "risk_level": "low",
+      "pattern": "お任せします",
+      "literal": "I leave it to you.",
+      "likely_read_by_indian_partner": "Full freedom to decide, with no further checks.",
+      "actual_intent": "Trust that the partner will act sensibly within unstated expectations. Surprises later can damage the relationship.",
+      "coaching": "State the limits: budget, brand rules, approvals needed and what must be reported back.",
+      "rewrite_en": "We trust you to handle [task]. Please keep within [limits] and let us know before [decision points]."
+    },
+    {
+      "id": "jp-12", "direction": "JP_to_IN", "risk_level": "low",
+      "pattern": "よろしくお願いします",
+      "literal": "Please treat this favourably / I look forward to working with you.",
+      "likely_read_by_indian_partner": "A courteous closing line, with no concrete request attached.",
+      "actual_intent": "A relationship-based expectation that the other side will follow through on what was discussed.",
+      "coaching": "Add the specific ask and date, so the expectation does not stay implicit.",
+      "rewrite_en": "Please confirm [specific item] by [date]. We look forward to working with you."
+    },
+    {
+      "id": "in-01", "direction": "IN_to_JP", "risk_level": "high",
+      "pattern": "Yes, no problem, it will be done.",
+      "literal": "Yes, no problem, it will be done.",
+      "likely_read_by_japanese_partner": "A firm commitment: feasibility has been checked and the deadline is safe.",
+      "actual_intent": "Often a sign of willingness and goodwill. Feasibility, timeline and dependencies may not have been confirmed yet.",
+      "coaching": "Ask for specifics: who, what, by when, and what could block it. Record the answers in the meeting minutes.",
+      "rewrite_en": "Thank you. Could you confirm the delivery date, the person responsible and any risks to that date?"
+    },
+    {
+      "id": "in-02", "direction": "IN_to_JP", "risk_level": "medium",
+      "pattern": "We will try our best.",
+      "literal": "We will try our best.",
+      "likely_read_by_japanese_partner": "A sincere pledge of maximum effort that signals high commitment.",
+      "actual_intent": "May be a polite hedge rather than a commitment to the outcome. Check what 'best' means in dates and quantities.",
+      "coaching": "Translate the phrase into a measurable target and agree on a checkpoint.",
+      "rewrite_en": "Please tell us what you can commit to by [date], and what would need to change to reach the full target."
+    },
+    {
+      "id": "in-03", "direction": "IN_to_JP", "risk_level": "medium",
+      "pattern": "I will revert shortly.",
+      "literal": "I will revert (reply) shortly.",
+      "likely_read_by_japanese_partner": "A reply within hours or the same day.",
+      "actual_intent": "'Shortly' is flexible and can mean a few days. It signals intent to respond, not a specific time.",
+      "coaching": "Ask for a date and time, and offer to schedule the follow-up yourself.",
+      "rewrite_en": "Thank you. Could you reply by [date, time]? If it helps, we can hold a short call at [time]."
+    }
+  ]
+}

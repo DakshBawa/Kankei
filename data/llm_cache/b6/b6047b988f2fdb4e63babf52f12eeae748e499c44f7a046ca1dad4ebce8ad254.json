@@ -1,0 +1,31 @@
+{
+  "key": "b6047b988f2fdb4e63babf52f12eeae748e499c44f7a046ca1dad4ebce8ad254",
+  "created_at": "2026-10-24T17:55:39+00:00",
+  "prompt_preview": "SME PROFILE: {\"product_category\":\"industrial_sensors\",\"business_model\":\"B2B\",\"budget_usd\":250000.0,\"priority_weights\":{}}\nSTATE: Tamil Nadu (opportunity score 7",
+  "response": {
+    "ja": {
+      "market_summary": "Strong cluster [states_scores_comparison.csv#Tamil Nadu] and a fake cite [nope.md#9].",
+      "target_customers": [
+        "Tier-1 auto suppliers"
+      ],
+      "competitors": [
+        "Not in corpus"
+      ],
+      "risks": [
+        "Power"
+      ]
+    },
+    "en": {
+      "market_summary": "Strong cluster [states_scores_comparison.csv#Tamil Nadu] and a fake cite [nope.md#9].",
+      "target_customers": [
+        "Tier-1 auto suppliers"
+      ],
+      "competitors": [
+        "Not in corpus"
+      ],
+      "risks": [
+        "Power"
+      ]
+    }
+  }
+}

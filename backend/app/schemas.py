@@ -72,6 +72,23 @@ class Citation(BaseModel):
     chunk_id: str
     source: str
     snippet: str
+    title: Optional[str] = None
+    source_url: Optional[str] = None
+    last_verified: str = "UNVERIFIED"
+    unverified: bool = True
+
+
+class ExplainRequest(BaseModel):
+    item_id: Optional[str] = None
+    query: Optional[str] = None
+    context: Optional[str] = None
+    language: Literal["en", "ja"] = "en"
+
+
+class ExplainResponse(BaseModel):
+    explanation: str
+    grounded: bool = True
+    citations: list[Citation] = Field(default_factory=list)
 
 
 class BriefResponse(BaseModel):

@@ -1,0 +1,6 @@
+{
+  "key": "346e605b1c602730f79c90f664113416adf7178aae6619877a1ebdb6833384ac",
+  "created_at": "2026-10-24T17:58:53+00:00",
+  "prompt_preview": "QUESTION: How many Japanese companies are in Maharashtra?\n\nCONTEXT:\n[states_scores_comparison.csv#Maharashtra] (Source: State Profile: Maharashtra, Verified: 20",
+  "response": "Maharashtra has 810 Japanese companies [states_scores_comparison.csv#Maharashtra]."
+}

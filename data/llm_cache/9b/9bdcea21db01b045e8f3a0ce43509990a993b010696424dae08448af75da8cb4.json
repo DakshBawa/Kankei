@@ -1,0 +1,6 @@
+{
+  "key": "9bdcea21db01b045e8f3a0ce43509990a993b010696424dae08448af75da8cb4",
+  "created_at": "2026-10-24T17:53:08+00:00",
+  "prompt_preview": "QUESTION: Is there demand for sensors in Maharashtra?\n\nCONTEXT:\n[states_scores_comparison.csv#Maharashtra] (Source: State Profile: Maharashtra, Verified: 2024-1",
+  "response": "{\"ja\": {\"market_summary\": \"Tamil Nadu [states_scores_comparison.csv#Tamil Nadu]\", \"target_customers\": [\"Auto\"], \"competitors\": [\"None\"], \"risks\": [\"Logistics\"]}, \"en\": {\"market_summary\": \"Tamil Nadu [states_scores_comparison.csv#Tamil Nadu]\", \"target_customers\": [\"Auto\"], \"competitors\": [\"None\"], \"risks\": [\"Logistics\"]}}"
+}

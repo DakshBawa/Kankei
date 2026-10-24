@@ -69,3 +69,22 @@ def recommend(req: ModelRecommendRequest) -> ModelRecommendResponse:
         notes=["Scores are heuristic. Budget thresholds are indicative placeholders, not quotes.",
                "Use /match/rank with the suggested partner_type, and /comply/checklist with the chosen entry_model."],
     )
+
+
+def recommend_model(profile: dict | ModelRecommendRequest) -> ModelRecommendResponse:
+    from app.schemas import SMEProfile
+    if isinstance(profile, dict):
+        cat = profile.get("product_category", "industrial_sensors")
+        if cat == "sensors":
+            cat = "industrial_sensors"
+        b_usd = profile.get("budget_usd") or (profile.get("budget_jpy", 5_000_000) / 150.0)
+        sme = SMEProfile(
+            product_category=cat if cat in ("industrial_sensors", "auto_components", "consumer_goods", "general") else "industrial_sensors",
+            business_model=profile.get("customer_type", "B2B"),
+            budget_usd=max(1000.0, float(b_usd)),
+            priority_weights=profile.get("weights") or {},
+        )
+        req = ModelRecommendRequest(profile=sme)
+    else:
+        req = profile
+    return recommend(req)

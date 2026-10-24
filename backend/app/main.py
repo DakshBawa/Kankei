@@ -1,6 +1,8 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app import session
 from app.modules.comply.routes import router as comply_router
 from app.modules.culture.routes import router as culture_router
 from app.modules.gtm.routes import router as gtm_router
@@ -9,14 +11,16 @@ from app.modules.research.routes import router as research_router
 
 app = FastAPI(title="Kankei API", version="0.2.0")
 
+origins = [o.strip() for o in os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",") if o.strip()]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=origins,
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-for r in (research_router, match_router, comply_router, gtm_router, culture_router):
+for r in (research_router, match_router, comply_router, gtm_router, culture_router, session.router):
     app.include_router(r)
 
 

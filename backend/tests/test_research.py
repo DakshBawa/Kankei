@@ -34,37 +34,24 @@ def test_priority_override_and_validation(client):
     assert r.json()["results"][0]["state"] == "Andhra Pradesh"  # cheapest land dominates
 
 
-@patch("groq.Groq")
-def test_llm_routes_with_groq_success(mock_groq_client, client):
-    """Test that LLM routes successfully integrate and return data when Groq API responds correctly."""
-    # Mock Groq chat completion response structure
-    mock_completion = type("MockCompletion", (), {
-        "choices": [
-            type("MockChoice", (), {
-                "message": type("MockMessage", (), {"content": "Sample Groq AI generated research brief/answer."})
-            })
-        ]
-    })
-    
-    mock_instance = mock_groq_client.return_value
-    mock_instance.chat.completions.create.return_value = mock_completion
-
+def test_llm_routes_with_mocked_llm_success(monkeypatch, client):
+    """Test that LLM routes successfully integrate and return data when LLM responds."""
+    from app import llm
+    monkeypatch.setattr(
+        llm, "_call_provider",
+        lambda *a: '{"ja": {"market_summary": "Tamil Nadu [states_scores_comparison.csv#Tamil Nadu]", "target_customers": ["Auto"], "competitors": ["None"], "risks": ["Logistics"]}, "en": {"market_summary": "Tamil Nadu [states_scores_comparison.csv#Tamil Nadu]", "target_customers": ["Auto"], "competitors": ["None"], "risks": ["Logistics"]}}'
+    )
     body = {"profile": {"budget_usd": 100000, "product_category": "industrial_sensors"}}
-    
-    # Test brief generation with mocked Groq
     response_brief = client.post("/research/brief", json=body)
     assert response_brief.status_code == 200
 
-    # Test Q&A with mocked Groq
     response_ask = client.post("/research/ask", json={"question": "Is there demand for sensors in Maharashtra?"})
     assert response_ask.status_code == 200
 
 
 def test_llm_routes_degrade_gracefully(client):
-    """Test that routes degrade gracefully with 503 if Groq API key is missing or client fails."""
-    with patch.dict(os.environ, {"GROQ_API_KEY": ""}, clear=True):
-        body = {"profile": {"budget_usd": 100000}}
-        assert client.post("/research/brief", json=body).status_code == 503
-        
-        r = client.post("/research/ask", json={"question": "Is there demand for sensors in Maharashtra?"})
-        assert r.status_code in (200, 503)
+    """Test that routes degrade gracefully with fallback when no key is set."""
+    body = {"profile": {"budget_usd": 100000}}
+    assert client.post("/research/brief", json=body).status_code == 200
+    r = client.post("/research/ask", json={"question": "Is there demand for sensors in Maharashtra?"})
+    assert r.status_code == 200
