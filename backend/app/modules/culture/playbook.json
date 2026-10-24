@@ -1,0 +1,52 @@
+{
+  "title": "Cross-Cultural Communication & Negotiation Playbook (Japan - India)",
+  "version": "1.0",
+  "section_7": {
+    "section_title": "Japanese-to-Indian Communication Patterns & Alignment",
+    "description": "Comparative framework for bridging communication gaps between Japanese expatriates/executives and Indian operational teams.",
+    "communication_dimensions": [
+      {
+        "dimension": "High-Context vs High-Explicitness",
+        "japanese_pattern": "Implicit, high-context communication. Relies on 'Kuuki wo yomu' (reading the air), subtle cues, and unspoken expectations.",
+        "indian_pattern": "Explicit, highly vocal, and expressive communication. Expects detailed verbal instructions and energetic discussion.",
+        "bridge_strategy": "Convert implicit Japanese expectations into written, itemized Standard Operating Procedures (SOPs) and detailed checklists."
+      },
+      {
+        "dimension": "Response & Agreement Signals",
+        "japanese_pattern": "Nodding and saying 'Hai' indicates comprehension ('I hear you'), not necessarily agreement or approval.",
+        "indian_pattern": "Nodding or saying 'Yes' often implies agreement to perform or a positive commitment.",
+        "bridge_strategy": "Establish explicit confirmation protocols ('Do we agree on the scope?' vs 'Did you understand the statement?')."
+      },
+      {
+        "dimension": "Decision-Making Speed & Process",
+        "japanese_pattern": "Consensus-driven ('Ringi' system) and thorough risk-aversion. Slow initial decision, rapid flawless execution.",
+        "indian_pattern": "Hierarchical, rapid decision-making driven by executive authority and adaptiveness ('Jugaad'/agility).",
+        "bridge_strategy": "Map out the decision timeline upfront. Explain the Ringi approval process clearly to Indian managers to manage expectations."
+      },
+      {
+        "dimension": "Handling Bad News & Delay Reporting",
+        "japanese_pattern": "Expects immediate 'Ho-Ren-So' (Report, Inform, Consult) at the very first sign of deviation or risk.",
+        "indian_pattern": "Tendency to solve problems independently before reporting, or withholding bad news until a fix is attempted.",
+        "bridge_strategy": "Reframe early delay reporting as a professional strength rather than a failure; conduct regular non-punitive syncs."
+      },
+      {
+        "dimension": "Feedback & Performance Communication",
+        "japanese_pattern": "Indirect feedback given privately; public criticism is strictly avoided to preserve harmony ('Wa').",
+        "indian_pattern": "Direct feedback common; energetic debate and public recognition are valued motivators.",
+        "bridge_strategy": "Praise in public, provide corrective feedback in private 1-on-1 meetings, focusing strictly on data and processes."
+      }
+    ],
+    "key_phrases_and_nuances": [
+      {
+        "japanese_phrase": "Zenshin shimasu / Sento shimasu (We will consider it)",
+        "perceived_by_indians": "Likely a 'Yes' or positive commitment.",
+        "actual_meaning": "Polite non-committal or subtle 'No' / low feasibility."
+      },
+      {
+        "indian_phrase": "It will be done / Problem solved",
+        "perceived_by_japanese": "The task is 100% completed and verified.",
+        "actual_meaning": "The process has been initiated or an agreeable workaround has been identified."
+      }
+    ]
+  }
+}

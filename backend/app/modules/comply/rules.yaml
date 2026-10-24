@@ -1,0 +1,212 @@
+# STARTER compliance checklist. Every rule is UNVERIFIED: written as a prompt for "what to check",
+# not as legal advice. Have Indian counsel / a customs broker confirm before relying on any item.
+#
+# applies_when keys (all optional; omitted key = wildcard; every given key must match):
+#   entry_model, product_category, business_model : list of allowed values
+#   hs_prefix : list of HS digit prefixes. If the request has no hs_code the rule shows as "check".
+#   wireless, prepackaged : bool, matched against the request flags
+status: "STARTER RULES - UNVERIFIED. Not legal advice; confirm each item with counsel / customs broker."
+rules:
+  - id: hs_classification
+    title: Confirm HS classification and duty rates
+    area: customs
+    authority: CBIC / ICEGATE
+    phase: pre_entry
+    description: Duty and import conditions depend on the exact tariff line. A wrong HS code changes duty and can trigger penalties.
+    action: Have a customs broker (CHA) confirm the 8-digit HS code and current BCD/SWS/IGST for each SKU.
+    source_hint: CBIC Customs Tariff (current year) / ICEGATE
+    applies_when: {}
+
+  - id: cepa_origin
+    title: Check India-Japan CEPA preferential duty
+    area: customs
+    authority: DGFT / CBIC
+    phase: pre_entry
+    description: Japanese-origin goods may qualify for reduced BCD under the CEPA if origin rules are met and a certificate of origin is issued.
+    action: Check CEPA schedule for your HS lines and set up certificate-of-origin issuance in Japan.
+    source_hint: India-Japan CEPA tariff schedule; Japan certificate of origin issuers
+    applies_when: {}
+
+  - id: ip_registration
+    title: Register trademarks / IP in India
+    area: ip
+    authority: Controller General of Patents, Designs & Trade Marks
+    phase: pre_entry
+    description: Trademark rights are territorial. Filing before sharing brand or technical details with partners reduces squatting and leakage risk.
+    action: File trademark applications in India before signing distributor / JV / manufacturing agreements.
+    source_hint: IP India (trademark registry)
+    applies_when: {}
+
+  - id: partner_due_diligence
+    title: Partner due diligence
+    area: partner
+    authority: MCA21, eCourts, GST portal
+    phase: pre_entry
+    description: Verify company status, directors, litigation and GST standing before committing to a partner.
+    action: Run MCA director/charge checks, eCourts litigation search, GST filing status; cross-check with the Match module's trust report.
+    source_hint: MCA21; eCourts; GST portal
+    applies_when:
+      entry_model: [export_via_distributor, contract_manufacturing, joint_venture]
+
+  - id: distributor_agreement
+    title: Distributor agreement terms and importer of record
+    area: contracts
+    authority: Indian Contract Act
+    phase: setup
+    description: Agree who is importer of record, Incoterms, territory/exclusivity, pricing control, warranty handling and termination.
+    action: Draft the distribution agreement with India-qualified counsel; settle importer-of-record and Incoterms explicitly.
+    source_hint: Counsel
+    applies_when:
+      entry_model: [export_via_distributor]
+
+  - id: manufacturing_agreement
+    title: Contract-manufacturing agreement, QA and IP protection
+    area: contracts
+    authority: Indian Contract Act
+    phase: setup
+    description: Cover quality specs, audit rights, tooling ownership, IP assignment, confidentiality and exit.
+    action: Draft the agreement with India-qualified counsel; include audit and IP clauses.
+    source_hint: Counsel
+    applies_when:
+      entry_model: [contract_manufacturing]
+
+  - id: jv_agreement
+    title: JV / shareholders' agreement
+    area: contracts
+    authority: Companies Act, 2013
+    phase: setup
+    description: Governance, reserved matters, deadlock, transfer restrictions, non-compete and exit mechanics.
+    action: Negotiate the JV and shareholders' agreement with India-qualified counsel.
+    source_hint: Companies Act, 2013; counsel
+    applies_when:
+      entry_model: [joint_venture]
+
+  - id: incorporation
+    title: Incorporate the Indian entity
+    area: corporate
+    authority: Ministry of Corporate Affairs (MCA)
+    phase: setup
+    description: A subsidiary or JV vehicle needs incorporation, directors (including a resident director), registered office, PAN/TAN.
+    action: Choose the entity type (e.g. private limited), appoint directors, file incorporation via MCA.
+    source_hint: MCA SPICe+
+    applies_when:
+      entry_model: [wholly_owned_subsidiary, joint_venture]
+
+  - id: fdi_reporting
+    title: FDI route check and RBI reporting
+    area: foreign_investment
+    authority: DPIIT / RBI (FEMA)
+    phase: setup
+    description: Check the sector's FDI route (most manufacturing is automatic) and file the required reports for foreign investment received.
+    action: Confirm the FDI route for your sector; file the RBI reporting on share allotment within the prescribed time.
+    source_hint: Consolidated FDI Policy; RBI FEMA notifications
+    applies_when:
+      entry_model: [wholly_owned_subsidiary, joint_venture]
+
+  - id: gst_registration
+    title: GST registration of the Indian selling entity
+    area: tax
+    authority: GST Council / GSTN
+    phase: setup
+    description: The entity that sells in India needs GST registration; it also enables input tax credit on IGST paid at import.
+    action: Register for GST; confirm place-of-supply and e-invoicing thresholds.
+    source_hint: GST portal
+    applies_when:
+      entry_model: [wholly_owned_subsidiary, joint_venture, contract_manufacturing]
+
+  - id: iec
+    title: Importer-Exporter Code (IEC)
+    area: customs
+    authority: DGFT
+    phase: setup
+    description: Whoever acts as importer of record generally needs an IEC. For a distributor model this is usually the Indian distributor.
+    action: Obtain an IEC for the importer of record (your Indian entity, or confirm the distributor holds one).
+    source_hint: DGFT IEC
+    applies_when: {}
+
+  - id: customs_clearance
+    title: Customs clearance setup
+    area: customs
+    authority: CBIC / ICEGATE
+    phase: import
+    description: Imports are cleared by filing a Bill of Entry, normally via a customs broker.
+    action: Appoint a customs broker (CHA); prepare invoice, packing list, bill of lading and certificate of origin.
+    source_hint: ICEGATE
+    applies_when: {}
+
+  - id: bis_crs_qco
+    title: Check BIS certification / Quality Control Orders
+    area: product_standards
+    authority: Bureau of Indian Standards (BIS)
+    phase: import
+    description: Certain electronics and electrical products must be BIS-registered or certified before import or sale.
+    action: Check whether your HS lines or product type fall under BIS CRS or a Quality Control Order.
+    source_hint: BIS CRS product list; DPIIT QCO notifications
+    applies_when:
+      hs_prefix: ["85", "90"]
+
+  - id: wpc_approval
+    title: Wireless equipment approval
+    area: product_standards
+    authority: Wireless Planning & Coordination / DoT
+    phase: import
+    description: Products with radio functions may need equipment type approval before import or sale.
+    action: Confirm ETA / type-approval requirements for the radio module.
+    source_hint: DoT / WPC Saral Sanchar
+    applies_when:
+      wireless: true
+
+  - id: ewaste_epr
+    title: E-waste EPR registration
+    area: environment
+    authority: CPCB
+    phase: ongoing
+    description: Importers/producers of listed electrical and electronic equipment may need EPR registration under the E-Waste (Management) Rules.
+    action: Check whether your products are listed equipment; register on the CPCB EPR portal if so.
+    source_hint: E-Waste (Management) Rules, 2022; CPCB
+    applies_when:
+      hs_prefix: ["85", "90"]
+
+  - id: legal_metrology
+    title: Legal Metrology packaging declarations
+    area: product_standards
+    authority: Dept. of Consumer Affairs / Legal Metrology
+    phase: import
+    description: Pre-packaged goods sold to consumers must carry mandatory declarations (importer details, MRP, net quantity, country of origin, etc.).
+    action: Confirm label declarations and importer registration under Legal Metrology (Packaged Commodities) Rules.
+    source_hint: Legal Metrology (Packaged Commodities) Rules
+    applies_when:
+      prepackaged: true
+
+  - id: transfer_pricing
+    title: Transfer pricing documentation
+    area: tax
+    authority: Income Tax Dept.
+    phase: ongoing
+    description: Transactions between the Japanese parent and its Indian entity must be at arm's length and documented.
+    action: Set the intercompany pricing policy; maintain TP documentation and annual filings.
+    source_hint: Income-tax Act TP provisions
+    applies_when:
+      entry_model: [wholly_owned_subsidiary, joint_venture]
+
+  - id: pe_risk
+    title: Permanent-establishment exposure
+    area: tax
+    authority: Income Tax Dept. / India-Japan DTAA
+    phase: ongoing
+    description: Staff, agents or fixed places in India acting for the Japanese company can create taxable presence even without an Indian entity.
+    action: Review travelling-staff and agency arrangements against the India-Japan tax treaty.
+    source_hint: India-Japan DTAA
+    applies_when:
+      entry_model: [export_via_distributor, contract_manufacturing]
+
+  - id: state_incentives
+    title: Apply for state incentives before investing
+    area: incentives
+    authority: State industrial development agency
+    phase: pre_entry
+    description: State incentive schemes usually require application / MoU before capital is committed.
+    action: Contact the state's industrial promotion agency early; see the Research module for state incentive scores.
+    source_hint: State industrial policy (e.g. Invest India / state portals)
+    applies_when:
+      entry_model: [wholly_owned_subsidiary, joint_venture, contract_manufacturing]
