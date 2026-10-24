@@ -3,36 +3,20 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useApp } from "@/lib/context";
 import { useT } from "@/lib/i18n";
-import { getHealth, seedDemo, rankStates, rankPartners, getChecklist } from "@/lib/api";
-import { DemoLabel, ScoreBadge, LoadingState, ErrorState } from "@/components/UI";
+import { getHealth, createSession, patchSession, rankStates, rankPartners, getChecklist } from "@/lib/api";
+import { ScoreBadge, LoadingState, ErrorState } from "@/components/UI";
 
 export default function Home() {
-  const { lang, session, setSession, setDemoLoaded } = useApp();
+  const { lang, session, setSession } = useApp();
   const tr = useT(lang);
   const [health, setHealth] = useState(null);
   const [healthErr, setHealthErr] = useState(null);
-  const [loadingDemo, setLoadingDemo] = useState(false);
-  const [demoStatus, setDemoStatus] = useState(null);
 
   useEffect(() => {
     getHealth()
       .then(setHealth)
       .catch((e) => setHealthErr(e.message));
   }, []);
-
-  const handleLoadDemo = async () => {
-    setLoadingDemo(true);
-    try {
-      const s = await seedDemo("demo");
-      setSession(s);
-      setDemoLoaded(true);
-      setDemoStatus("loaded");
-    } catch (e) {
-      setDemoStatus("error");
-    } finally {
-      setLoadingDemo(false);
-    }
-  };
 
   const sess = session;
   const research = sess?.research;
@@ -54,20 +38,11 @@ export default function Home() {
             <h1 style={{ fontSize: "1.5rem", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, color: "var(--primary)" }}>
               Journey Overview
             </h1>
-            {sess?.profile?.demo && <DemoLabel />}
           </div>
           <p style={{ color: "var(--text-secondary)", fontSize: "0.84rem" }}>
-            Executive Command Center — Tanaka Seiki India Market Entry
+            Executive Command Center — {sess?.profile?.company || "India Market Entry"}
           </p>
         </div>
-        <button
-          className="btn btn-secondary"
-          onClick={handleLoadDemo}
-          disabled={loadingDemo}
-        >
-          {loadingDemo ? <span className="spinner" style={{ width: 14, height: 14 }} /> : "⚡"}
-          Load Demo Data
-        </button>
       </div>
 
       {/* Health indicator */}
@@ -85,17 +60,73 @@ export default function Home() {
         )}
       </div>
 
-      {/* Demo status */}
-      {demoStatus === "loaded" && (
-        <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: "var(--radius-sm)", padding: "10px 16px", fontSize: "0.78rem", color: "#92400e", marginBottom: 16 }}>
-          ⚡ Demo data loaded successfully. Navigate to each phase to explore.
+      {/* Company Profile */}
+      {sess?.profile && (
+        <div className="card" style={{ marginBottom: 24 }}>
+          <div className="card-header"><div className="card-title">Company Profile</div><div className="card-label">Details captured during onboarding</div></div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>
+            <div style={{ padding: "10px 12px", background: "var(--bg)", borderRadius: "var(--radius-sm)", border: "1px solid var(--border)" }}>
+              <div style={{ fontSize: "0.72rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 4 }}>Company</div>
+              <div style={{ fontWeight: 600, color: "var(--text-primary)" }}>{sess.profile.company || "—"}</div>
+            </div>
+            <div style={{ padding: "10px 12px", background: "var(--bg)", borderRadius: "var(--radius-sm)", border: "1px solid var(--border)" }}>
+              <div style={{ fontSize: "0.72rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 4 }}>Headquarters</div>
+              <div style={{ color: "var(--text-primary)" }}>{sess.profile.hq || "—"}</div>
+            </div>
+            <div style={{ padding: "10px 12px", background: "var(--bg)", borderRadius: "var(--radius-sm)", border: "1px solid var(--border)" }}>
+              <div style={{ fontSize: "0.72rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 4 }}>Product / Service</div>
+              <div style={{ color: "var(--text-primary)", fontSize: "0.85rem" }}>{sess.profile.product || "—"}</div>
+            </div>
+            <div style={{ padding: "10px 12px", background: "var(--bg)", borderRadius: "var(--radius-sm)", border: "1px solid var(--border)" }}>
+              <div style={{ fontSize: "0.72rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 4 }}>Category</div>
+              <div style={{ color: "var(--text-primary)" }}>{sess.profile.product_category?.replace(/_/g, " ") || "—"}</div>
+            </div>
+            <div style={{ padding: "10px 12px", background: "var(--bg)", borderRadius: "var(--radius-sm)", border: "1px solid var(--border)" }}>
+              <div style={{ fontSize: "0.72rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 4 }}>Business Model</div>
+              <div style={{ color: "var(--text-primary)" }}>{sess.profile.customer_type || "—"}</div>
+            </div>
+            <div style={{ padding: "10px 12px", background: "var(--bg)", borderRadius: "var(--radius-sm)", border: "1px solid var(--border)" }}>
+              <div style={{ fontSize: "0.72rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 4 }}>Budget (JPY)</div>
+              <div style={{ color: "var(--text-primary)", fontWeight: 600 }}>{sess.profile.budget_jpy ? `¥${Number(sess.profile.budget_jpy).toLocaleString()}` : "—"}</div>
+            </div>
+            <div style={{ padding: "10px 12px", background: "var(--bg)", borderRadius: "var(--radius-sm)", border: "1px solid var(--border)" }}>
+              <div style={{ fontSize: "0.72rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 4 }}>Employees</div>
+              <div style={{ color: "var(--text-primary)" }}>{sess.profile.employees || "—"}</div>
+            </div>
+            <div style={{ padding: "10px 12px", background: "var(--bg)", borderRadius: "var(--radius-sm)", border: "1px solid var(--border)" }}>
+              <div style={{ fontSize: "0.72rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 4 }}>Entry Route</div>
+              <div style={{ color: "var(--text-primary)", fontSize: "0.82rem" }}>{sess.profile.route?.replace(/_/g, " ") || "—"}</div>
+            </div>
+          </div>
         </div>
       )}
-      {demoStatus === "error" && (
-        <div className="error-state" style={{ padding: "10px 16px", marginBottom: 16 }}>
-          Demo seed failed. Ensure the backend is running.
+
+      {/* Progress snapshot */}
+      <div className="card" style={{ marginBottom: 24 }}>
+        <div className="card-header"><div className="card-title">Journey Progress</div><div className="card-label">Stages completed so far</div></div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
+          {[
+            { num: "01", label: "Research Hub", sub: "Market Data & State Ranking", href: "/research", color: "var(--primary)", done: !!topState },
+            { num: "02", label: "Partner Matching", sub: "Shortlist & Due Diligence", href: "/match", color: "var(--secondary)", done: partnerCount > 0 },
+            { num: "03", label: "Comply & GTM", sub: "Regulatory & Commercial Launch", href: "/comply", color: "var(--tertiary)", done: complianceItems > 0 },
+            { num: "04", label: "Launch Playbook", sub: "Entity Setup & Operations", href: "/gtm", color: "var(--success)", done: !!gtm },
+          ].map((stage) => (
+            <Link key={stage.num} href={stage.href} style={{ textDecoration: "none" }}>
+              <div style={{ padding: 16, borderRadius: "var(--radius)", border: `1px solid ${stage.done ? stage.color : "var(--border)"}`, background: stage.done ? `${stage.color}0d` : "var(--bg)", transition: "all 0.2s", cursor: "pointer" }} onMouseEnter={(e) => e.currentTarget.style.transform = "translateY(-2px)"} onMouseLeave={(e) => e.currentTarget.style.transform = ""}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                  <span style={{ width: 28, height: 28, borderRadius: "50%", background: stage.done ? stage.color : "var(--border)", color: stage.done ? "#fff" : "var(--text-muted)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.72rem", fontWeight: 700 }}>{stage.done ? "✓" : stage.num}</span>
+                  <span style={{ fontSize: "0.82rem", fontWeight: 700, color: stage.done ? stage.color : "var(--text-secondary)" }}>{stage.done ? "Complete" : "Upcoming"}</span>
+                </div>
+                <div style={{ fontWeight: 700, color: "var(--text-primary)", fontSize: "0.9rem", marginBottom: 4, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{stage.label}</div>
+                <div style={{ fontSize: "0.74rem", color: "var(--text-muted)" }}>{stage.sub}</div>
+              </div>
+            </Link>
+          ))}
         </div>
-      )}
+        <div style={{ marginTop: 16, paddingTop: 12, borderTop: "1px solid var(--border)", fontSize: "0.78rem", color: "var(--text-muted)" }}>
+          {topState ? "✓ Top target state ranked" : "○ Run Research to rank target states"} &nbsp;·&nbsp;{partnerCount > 0 ? "✓ Partners matched" : "○ Run Partner Matching to shortlist partners"} &nbsp;·&nbsp;{complianceItems > 0 ? "✓ Compliance steps identified" : "○ Run Compliance to generate regulatory roadmap"} &nbsp;·&nbsp;{gtm ? "✓ GTM strategy ready" : "○ Run GTM to build price waterfall"}
+        </div>
+      </div>
 
       {/* Metric grid */}
       <div className="metric-grid" style={{ marginBottom: 28 }}>
@@ -138,81 +169,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* 4-Stage Pipeline */}
-      <div className="card" style={{ marginBottom: 24 }}>
-        <div className="card-header">
-          <div>
-            <div className="card-title">4-Stage Bilateral Pipeline</div>
-            <div className="card-label">Bilateral Market Expansion Roadmap</div>
-          </div>
-          {sess?.profile?.demo && <DemoLabel />}
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
-          {[
-            { num: "01", label: "Research Hub", sub: "Market Data & State Ranking", href: "/research", color: "var(--primary)", done: !!topState },
-            { num: "02", label: "Partner Matching", sub: "Shortlist & Due Diligence", href: "/match", color: "var(--secondary)", done: partnerCount > 0 },
-            { num: "03", label: "Comply & GTM", sub: "Regulatory & Commercial Launch", href: "/comply", color: "var(--tertiary)", done: complianceItems > 0 },
-            { num: "04", label: "Launch Playbook", sub: "Entity Setup & Operations", href: "/gtm", color: "var(--success)", done: !!gtm },
-          ].map((stage) => (
-            <Link key={stage.num} href={stage.href} style={{ textDecoration: "none" }}>
-              <div style={{
-                padding: 16,
-                borderRadius: "var(--radius)",
-                border: `1px solid ${stage.done ? stage.color : "var(--border)"}`,
-                background: stage.done ? `${stage.color}0d` : "var(--bg)",
-                transition: "all 0.2s",
-                cursor: "pointer",
-              }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = "translateY(-2px)"}
-                onMouseLeave={(e) => e.currentTarget.style.transform = ""}
-              >
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-                  <span style={{
-                    width: 28, height: 28, borderRadius: "50%",
-                    background: stage.done ? stage.color : "var(--border)",
-                    color: stage.done ? "#fff" : "var(--text-muted)",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: "0.72rem", fontWeight: 700,
-                  }}>{stage.done ? "✓" : stage.num}</span>
-                  <span style={{ fontSize: "0.82rem", fontWeight: 700, color: stage.done ? stage.color : "var(--text-secondary)" }}>
-                    {stage.done ? "Complete" : "Upcoming"}
-                  </span>
-                </div>
-                <div style={{ fontWeight: 700, color: "var(--text-primary)", fontSize: "0.9rem", marginBottom: 4, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-                  {stage.label}
-                </div>
-                <div style={{ fontSize: "0.74rem", color: "var(--text-muted)" }}>{stage.sub}</div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      {/* Stage status (if demo loaded) */}
-      {stages && (
-        <div className="card">
-          <div className="card-header">
-            <div className="card-title">Demo Seed Status</div>
-            <DemoLabel />
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 10 }}>
-            {Object.entries(stages).map(([name, s]) => (
-              <div key={name} style={{
-                padding: "10px 14px",
-                borderRadius: "var(--radius-sm)",
-                background: s.ok ? "#f0fdf4" : "#fef2f2",
-                border: `1px solid ${s.ok ? "#86efac" : "#fca5a5"}`,
-              }}>
-                <div style={{ fontWeight: 700, fontSize: "0.8rem", color: s.ok ? "var(--success)" : "var(--danger)", marginBottom: 2 }}>
-                  {s.ok ? "✓" : "✗"} {name}
-                </div>
-                <div style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>{s.ms}ms</div>
-                {!s.ok && <div style={{ fontSize: "0.7rem", color: "#dc2626", marginTop: 4 }}>{s.error}</div>}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

@@ -15,14 +15,6 @@ export function TierBadge({ tier }) {
   return <span className={`chip ${colors[tier] || "neutral"}`}>{tier}</span>;
 }
 
-export function DemoLabel() {
-  return (
-    <span className="demo-label">
-      ⚡ Demo Data
-    </span>
-  );
-}
-
 export function FactorBar({ factor, value, weight, contribution }) {
   const pct = Math.min(100, Math.round((value || 0) * 100));
   return (

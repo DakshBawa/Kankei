@@ -34,9 +34,10 @@ def build(req: PriceWaterfallRequest) -> PriceWaterfallResponse:
     if req.freight_per_unit or req.insurance_per_unit:
         add("Freight + insurance", "cost", (req.freight_per_unit + req.insurance_per_unit) * fx)
     add("Landing charge (valuation)", "cost", lc.assessable_value_inr - lc.cif_inr)
-    bcd, sws, _igst = lc.lines
-    add("Basic Customs Duty", "duty", bcd.amount_inr)
-    add("Social Welfare Surcharge", "duty", sws.amount_inr)
+    # Look up duty lines by label (robust to line-order changes in landed_cost.compute)
+    _lines = {l.label: l for l in lc.lines}
+    add("Basic Customs Duty", "duty", _lines["Basic Customs Duty (BCD)"].amount_inr)
+    add("Social Welfare Surcharge", "duty", _lines["Social Welfare Surcharge (SWS)"].amount_inr)
     landed_excl_igst = cum
 
     price = landed_excl_igst

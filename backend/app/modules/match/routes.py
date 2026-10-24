@@ -68,6 +68,8 @@ def rank_partners(req: MatchRequest):
         s_score = state_scores.get(p.state, 0.0)
         comps = fit_components(p, req, s_score)
         fit = fit_score(comps)
+        if fit == 0.0:
+            continue  # hard constraint failed
         conflicts = [f"Handles competing brand: {b}" for b in p.brands
                      if any(c in b.lower() or b.lower() in c for c in competitors)]
         match = FIT_SHARE * fit + TRUST_SHARE * trust.score

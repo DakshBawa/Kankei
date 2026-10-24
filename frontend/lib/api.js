@@ -25,8 +25,6 @@ export const createSession = () => call("/session", { method: "POST" });
 export const getSession = (id) => call(`/session/${id}`);
 export const patchSession = (id, patch) =>
   call(`/session/${id}`, { method: "PATCH", body: JSON.stringify(patch) });
-export const seedDemo = (session_id = "demo") =>
-  call(`/session/seed-demo?session_id=${session_id}`, { method: "POST" });
 
 // ── Research ──────────────────────────────────────────────────────────────────
 export const rankStates = (profile, top_n) =>

@@ -3,22 +3,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useApp } from "@/lib/context";
 import { useT } from "@/lib/i18n";
-import { seedDemo } from "@/lib/api";
-import { DemoLabel } from "@/components/UI";
-
-const DEMO_PROFILE = {
-  company: "Tanaka Seiki",
-  hq: "Osaka, Japan",
-  employees: "45",
-  product: "Industrial temperature and pressure sensors",
-  product_category: "industrial_sensors",
-  customer_type: "B2B",
-  budget_jpy: "5000000",
-  route: "import",
-};
+import { createSession, patchSession } from "@/lib/api";
 
 export default function OnboardPage() {
-  const { lang, setSession, setDemoLoaded } = useApp();
+  const { lang, setSession } = useApp();
   const tr = useT(lang);
   const router = useRouter();
   const [form, setForm] = useState({
@@ -37,9 +25,9 @@ export default function OnboardPage() {
     e.preventDefault();
     setLoading(true); setError(null);
     try {
-      const s = await seedDemo("demo");
-      setSession(s);
-      setDemoLoaded(true);
+      const s = await createSession();
+      await patchSession(s.session_id, { profile: form });
+      setSession({ ...s, profile: form });
       router.push("/research");
     } catch (err) {
       setError(err.message);
@@ -48,8 +36,6 @@ export default function OnboardPage() {
       setLoading(false);
     }
   };
-
-  const handleDemoFill = () => setForm(DEMO_PROFILE);
 
   return (
     <div className="animate-fadeIn" style={{ maxWidth: 640, margin: "0 auto" }}>
@@ -65,16 +51,7 @@ export default function OnboardPage() {
       <div className="card">
         <div className="card-header">
           <div className="card-title">Company Profile</div>
-          <button className="btn btn-outline btn-sm" onClick={handleDemoFill}>
-            ⚡ Autofill Demo
-          </button>
         </div>
-
-        {form.company === DEMO_PROFILE.company && (
-          <div style={{ marginBottom: 16 }}>
-            <DemoLabel /> <span style={{ fontSize: "0.78rem", color: "var(--text-muted)", marginLeft: 6 }}>Tanaka Seiki demo persona loaded</span>
-          </div>
-        )}
 
         {error && (
           <div className="error-state" style={{ marginBottom: 16 }}>
@@ -86,7 +63,7 @@ export default function OnboardPage() {
           <div className="grid-2">
             <div className="form-group">
               <label className="form-label">Company Name *</label>
-              <input className="form-input" value={form.company} onChange={e => fill({ company: e.target.value })} placeholder="e.g. Tanaka Seiki K.K." required />
+              <input className="form-input" value={form.company} onChange={e => fill({ company: e.target.value })} placeholder="e.g. Your Company K.K." required />
             </div>
             <div className="form-group">
               <label className="form-label">Headquarters</label>
@@ -142,7 +119,7 @@ export default function OnboardPage() {
           <div style={{ display: "flex", gap: 10, marginTop: 24 }}>
             <button type="submit" className="btn btn-primary btn-lg" disabled={loading} style={{ flex: 1 }}>
               {loading ? <span className="spinner" style={{ width: 16, height: 16 }} /> : null}
-              {loading ? "Seeding demo…" : "Continue to Research →"}
+              {loading ? "Saving profile…" : "Continue to Research →"}
             </button>
           </div>
         </form>

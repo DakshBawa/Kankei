@@ -2,9 +2,9 @@
 import { useState } from "react";
 import { useApp } from "@/lib/context";
 import { useT } from "@/lib/i18n";
-import { getPriceWaterfall, getModelRecommendation } from "@/lib/api";
+import { getPriceWaterfall, getModelRecommendation, patchSession } from "@/lib/api";
 import {
-  DemoLabel, LoadingState, ErrorState, EmptyState, ScoreBadge, Skeleton
+  LoadingState, ErrorState, EmptyState, ScoreBadge, Skeleton
 } from "@/components/UI";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell,
@@ -21,7 +21,7 @@ const KIND_COLORS = {
 };
 
 export default function GTMPage() {
-  const { lang, session } = useApp();
+  const { lang, session, setSession } = useApp();
   const tr = useT(lang);
   const [tab, setTab] = useState("waterfall");
 
@@ -58,6 +58,10 @@ export default function GTMPage() {
     try {
       const req = { ...wfReq };
       if (req.currency === "INR") delete req.fx_to_inr;
+      if (req.currency !== "INR" && !req.fx_to_inr) {
+        setWfError(`FX rate (INR per 1 ${req.currency}) is required.`);
+        return;
+      }
       if (!req.competitor_price_inr) delete req.competitor_price_inr;
       const data = await getPriceWaterfall(req);
       setWfResult(data);
@@ -73,6 +77,8 @@ export default function GTMPage() {
     try {
       const data = await getModelRecommendation(mrReq);
       setMrResult(data);
+      setSession({ ...session, gtm: data });
+      try { await patchSession(session.session_id, { gtm: data }); } catch {}
     } catch (e) {
       setMrError(e.message);
     } finally {
@@ -100,7 +106,6 @@ export default function GTMPage() {
             Price waterfall, GTM model comparison, and market entry strategy
           </p>
         </div>
-        {session?.profile?.demo && <DemoLabel />}
       </div>
 
       <div className="tabs">
@@ -120,7 +125,7 @@ export default function GTMPage() {
               </div>
               <div className="form-group">
                 <label className="form-label">Unit Price (FOB)</label>
-                <input className="form-input" type="number" value={wfReq.unit_price} onChange={e => setWfReq(r => ({ ...r, unit_price: parseFloat(e.target.value) || 0 }))} />
+                <input className="form-input" type="number" value={wfReq.unit_price || ""} onChange={e => setWfReq(r => ({ ...r, unit_price: e.target.value === "" ? 0 : parseFloat(e.target.value) }))} />
               </div>
               <div className="form-group">
                 <label className="form-label">Currency</label>
@@ -138,7 +143,7 @@ export default function GTMPage() {
               )}
               <div className="form-group">
                 <label className="form-label">Freight / Unit</label>
-                <input className="form-input" type="number" value={wfReq.freight_per_unit} onChange={e => setWfReq(r => ({ ...r, freight_per_unit: parseFloat(e.target.value) || 0 }))} />
+                <input className="form-input" type="number" value={wfReq.freight_per_unit || ""} onChange={e => setWfReq(r => ({ ...r, freight_per_unit: e.target.value === "" ? 0 : parseFloat(e.target.value) }))} />
               </div>
               <div className="form-group">
                 <label className="form-label">Competitor Price (INR, ex-GST)</label>

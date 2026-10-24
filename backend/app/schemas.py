@@ -21,6 +21,10 @@ class SMEProfile(BaseModel):
     product_category: ProductCategory = "general"
     business_model: BusinessModel = "B2B"
     budget_usd: float = Field(gt=0, description="Total market-entry budget in USD")
+    # Optional free-text description of the product/service (used for TF-IDF partner matching)
+    product_description: Optional[str] = None
+    # Target Indian states for market entry (used for geo coverage hard constraint)
+    target_states: list[str] = Field(default_factory=list)
     # Optional overrides, e.g. {"cluster": 5, "cost": 1}. Missing keys use category defaults.
     priority_weights: dict[Factor, float] = Field(default_factory=dict)
 
@@ -113,12 +117,17 @@ class AskResponse(BaseModel):
 
 
 # ================================================================== match
+class RedFlag(BaseModel):
+    code: str                           # rule-generated fact code, e.g. "director_linked_to_struck_off"
+    detail: str                         # short factual description (no LLM wording here)
+
 class TrustReport(BaseModel):
     partner_id: str
     score: float                        # 0-100
     tier: Literal["A", "B", "C", "High risk"]
     components: list[ScoreComponent]
-    flags: list[str]                    # human-readable red/amber flags
+    flags: list[str]                    # human-readable red/amber flags (LLM-phrased from red_flags)
+    red_flags: list[RedFlag] = Field(default_factory=list)  # rule-generated facts only
 
 
 class PartnerSummary(BaseModel):

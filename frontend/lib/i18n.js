@@ -17,8 +17,6 @@ export const t = {
     vault: "Document Vault & Reports",
     vaultSub: "Drafts, Resolutions, Statutory Filings",
     // Common
-    loadDemo: "Load Demo",
-    demoData: "Demo Data",
     loading: "Loading…",
     error: "Error",
     retry: "Retry",
@@ -68,8 +66,6 @@ export const t = {
     cultureSub: "交渉プロトコル・摩擦軽減AI",
     vault: "ドキュメントボルト＆レポート",
     vaultSub: "草稿、決議書、法定申告書類",
-    loadDemo: "デモデータ読込",
-    demoData: "デモデータ",
     loading: "読込中…",
     error: "エラー",
     retry: "再試行",

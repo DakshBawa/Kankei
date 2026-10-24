@@ -2,9 +2,9 @@
 import { useState } from "react";
 import { useApp } from "@/lib/context";
 import { useT } from "@/lib/i18n";
-import { getChecklist, getLandedCost, searchHS, explainCompliance } from "@/lib/api";
+import { getChecklist, getLandedCost, searchHS, explainCompliance, patchSession } from "@/lib/api";
 import {
-  Citations, DemoLabel, LoadingState, ErrorState, EmptyState, Skeleton
+  Citations, LoadingState, ErrorState, EmptyState, Skeleton
 } from "@/components/UI";
 
 const PHASE_ORDER = ["pre_entry", "setup", "import", "ongoing"];
@@ -12,7 +12,7 @@ const PHASE_LABELS = { pre_entry: "Pre-Entry", setup: "Setup", import: "Import",
 const PHASE_COLORS = { pre_entry: "var(--secondary)", setup: "var(--primary)", import: "var(--tertiary)", ongoing: "var(--success)" };
 
 export default function ComplyPage() {
-  const { lang, session } = useApp();
+  const { lang, session, setSession } = useApp();
   const tr = useT(lang);
   const [tab, setTab] = useState("checklist");
 
@@ -54,6 +54,8 @@ export default function ComplyPage() {
     try {
       const data = await getChecklist(clReq);
       setChecklist(data);
+      setSession({ ...session, comply: data?.items || [] });
+      try { await patchSession(session.session_id, { comply: data?.items || [] }); } catch {}
     } catch (e) {
       setClError(e.message);
     } finally {
@@ -66,6 +68,10 @@ export default function ComplyPage() {
     try {
       const req = { ...lcReq };
       if (req.currency === "INR") { delete req.fx_to_inr; }
+      if (req.currency !== "INR" && !req.fx_to_inr) {
+        setLcError(`FX rate (INR per 1 ${req.currency}) is required.`);
+        return;
+      }
       if (!req.bcd_override_pct) { delete req.bcd_override_pct; }
       const data = await getLandedCost(req);
       setLcResult(data);
@@ -112,7 +118,6 @@ export default function ComplyPage() {
             Regulatory roadmap, landed cost calculator, and compliance checklist
           </p>
         </div>
-        {session?.profile?.demo && <DemoLabel />}
       </div>
 
       <div className="tabs">
@@ -289,7 +294,7 @@ export default function ComplyPage() {
               </div>
               <div className="form-group">
                 <label className="form-label">Goods Value (FOB)</label>
-                <input className="form-input" type="number" value={lcReq.goods_value} onChange={e => setLcReq(r => ({ ...r, goods_value: parseFloat(e.target.value) || 0 }))} />
+                <input className="form-input" type="number" value={lcReq.goods_value || ""} onChange={e => setLcReq(r => ({ ...r, goods_value: e.target.value === "" ? 0 : parseFloat(e.target.value) }))} />
               </div>
               <div className="form-group">
                 <label className="form-label">Currency</label>
@@ -307,11 +312,11 @@ export default function ComplyPage() {
               )}
               <div className="form-group">
                 <label className="form-label">Freight</label>
-                <input className="form-input" type="number" value={lcReq.freight} onChange={e => setLcReq(r => ({ ...r, freight: parseFloat(e.target.value) || 0 }))} />
+                <input className="form-input" type="number" value={lcReq.freight || ""} onChange={e => setLcReq(r => ({ ...r, freight: e.target.value === "" ? 0 : parseFloat(e.target.value) }))} />
               </div>
               <div className="form-group">
                 <label className="form-label">Insurance</label>
-                <input className="form-input" type="number" value={lcReq.insurance} onChange={e => setLcReq(r => ({ ...r, insurance: parseFloat(e.target.value) || 0 }))} />
+                <input className="form-input" type="number" value={lcReq.insurance || ""} onChange={e => setLcReq(r => ({ ...r, insurance: e.target.value === "" ? 0 : parseFloat(e.target.value) }))} />
               </div>
               <div className="form-group">
                 <label className="form-label">BCD Override % (CEPA)</label>

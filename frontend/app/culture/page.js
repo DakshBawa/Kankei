@@ -4,7 +4,7 @@ import { useApp } from "@/lib/context";
 import { useT } from "@/lib/i18n";
 import { getPlaybook, coachMessage, checkPhrase } from "@/lib/api";
 import {
-  DemoLabel, LoadingState, ErrorState, EmptyState, RiskFlag
+  LoadingState, ErrorState, EmptyState, RiskFlag
 } from "@/components/UI";
 
 export default function CulturePage() {
@@ -77,7 +77,6 @@ export default function CulturePage() {
             Bi-directional Japan ↔ India communication intelligence & negotiation guidance
           </p>
         </div>
-        {session?.profile?.demo && <DemoLabel />}
       </div>
 
       {/* Quick explanation card */}

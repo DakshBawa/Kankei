@@ -115,45 +115,13 @@ def test_corpus_seed_writes_headers_and_respects_if_empty(tmp_path, monkeypatch,
     assert files[0].read_text(encoding="utf-8") == "edited by hand"
 
 
-# ------------------------------------------------------------ 3. seed-demo endpoint
+# ------------------------------------------------------------ 3. session CRUD
 @pytest.fixture
 def client(monkeypatch):
     monkeypatch.setattr(session, "store", session.SessionStore(None))
     app = FastAPI()
     app.include_router(session.router)
     return TestClient(app)
-
-
-def _ok(name):
-    return lambda state: {"stage": name, "company": state["profile"]["company"]}
-
-
-def test_seed_demo_fills_every_stage_in_one_call(client, monkeypatch):
-    monkeypatch.setattr(session, "STAGES", [(n, _ok(n)) for n in ("research", "match", "comply")])
-    r = client.post("/session/seed-demo")
-    assert r.status_code == 200
-    body = r.json()
-    assert body["profile"]["company"] == "Tanaka Seiki"
-    assert all(body["stages"][n]["ok"] for n in ("research", "match", "comply"))
-    assert client.get("/session/demo").json()["research"]["stage"] == "research"
-
-
-def test_one_failing_stage_does_not_stop_the_others(client, monkeypatch):
-    def broken(state):
-        raise RuntimeError("llm down")
-
-    monkeypatch.setattr(session, "STAGES", [("research", _ok("research")), ("brief", broken), ("match", _ok("match"))])
-    body = client.post("/session/seed-demo").json()
-    assert body["stages"]["brief"]["ok"] is False and "llm down" in body["stages"]["brief"]["error"]
-    assert body["match"]["stage"] == "match" and body["brief"] is None
-
-
-def test_all_stages_failing_is_a_500(client, monkeypatch):
-    def broken(state):
-        raise RuntimeError("x")
-
-    monkeypatch.setattr(session, "STAGES", [("research", broken)])
-    assert client.post("/session/seed-demo").status_code == 500
 
 
 def test_session_crud(client):

@@ -2,9 +2,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { useApp } from "@/lib/context";
 import { useT } from "@/lib/i18n";
-import { rankStates, getMarketBrief, askResearch } from "@/lib/api";
+import { rankStates, getMarketBrief, askResearch, patchSession } from "@/lib/api";
 import {
-  ScoreBadge, FactorBreakdown, Citations, DemoLabel,
+  ScoreBadge, FactorBreakdown, Citations,
   LoadingState, ErrorState, EmptyState, RiskFlag, Skeleton
 } from "@/components/UI";
 import {
@@ -26,9 +26,24 @@ const FACTOR_LABELS = {
 };
 
 export default function ResearchPage() {
-  const { lang, session } = useApp();
+  const { lang, session, setSession } = useApp();
   const tr = useT(lang);
-  const [profile, setProfile] = useState(DEFAULT_PROFILE);
+  const sessionProfile = session?.profile;
+  const [profile, setProfile] = useState(sessionProfile ? {
+    product_category: sessionProfile.product_category || "industrial_sensors",
+    business_model: sessionProfile.customer_type || "B2B",
+    budget_usd: (sessionProfile.budget_jpy ? parseFloat(sessionProfile.budget_jpy) / 150 : 33333),
+    product_description: sessionProfile.product || "",
+    target_states: [],
+    priority_weights: {},
+  } : {
+    product_category: "industrial_sensors",
+    business_model: "B2B",
+    budget_usd: 33333,
+    product_description: "",
+    target_states: [],
+    priority_weights: {},
+  });
   const [weights, setWeights] = useState({});
   const [states, setStates] = useState([]);
   const [weightsUsed, setWeightsUsed] = useState({});
@@ -43,6 +58,20 @@ export default function ResearchPage() {
   const [askLoading, setAskLoading] = useState(false);
   const [showWeights, setShowWeights] = useState(false);
 
+  // Re-derive profile when session changes (e.g. after onboarding)
+  useEffect(() => {
+    if (sessionProfile) {
+      setProfile({
+        product_category: sessionProfile.product_category || "industrial_sensors",
+        business_model: sessionProfile.customer_type || "B2B",
+        budget_usd: (sessionProfile.budget_jpy ? parseFloat(sessionProfile.budget_jpy) / 150 : 33333),
+        product_description: sessionProfile.product || "",
+        target_states: [],
+        priority_weights: {},
+      });
+    }
+  }, [sessionProfile]);
+
   const fetchRanking = useCallback(async () => {
     setLoading(true); setError(null);
     try {
@@ -51,6 +80,8 @@ export default function ResearchPage() {
       const data = await rankStates({ ...profile, priority_weights: prio });
       setStates(data.results || []);
       setWeightsUsed(data.weights_used || {});
+      setSession({ ...session, research: data.results || [] });
+      try { await patchSession(session.session_id, { research: data.results || [] }); } catch {}
       if (!selectedState && data.results?.length) {
         setSelectedState(data.results[0].state);
       }
@@ -69,7 +100,7 @@ export default function ResearchPage() {
     } else {
       fetchRanking();
     }
-  }, [session]);
+  }, [session, fetchRanking]);
 
   const fetchBrief = async (stateName) => {
     setBriefLoading(true); setBrief(null);
@@ -122,7 +153,6 @@ export default function ResearchPage() {
           </p>
         </div>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          {session?.profile?.demo && <DemoLabel />}
           <button className="btn btn-outline btn-sm" onClick={() => setShowWeights(!showWeights)}>
             ⚖ {tr("weightSliders")}
           </button>

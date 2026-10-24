@@ -48,6 +48,30 @@ def load_states() -> pd.DataFrame:
     return df
 
 
+# Keywords in product_description that hint at which factors matter most
+_DESC_KEYWORDS: dict[str, list[str]] = {
+    "demand": ["consumer", "retail", "mass market", "b2c", "electronics", "appliance"],
+    "cluster": ["auto", "automotive", "component", "part", "supply chain", "cluster"],
+    "japan_presence": ["japan", "japanese", "nippon", "toyota", "mitsubishi", "oem"],
+    "logistics": ["port", "coastal", "shipping", "logistics", "export", "import"],
+    "incentives": ["subsidy", "incentive", "tax", "concession", "relief"],
+    "cost": ["land", "rent", "cheap", "low cost", "budget", "affordable"],
+    "talent": ["engineer", "skilled", "talent", "workforce", "hiring", "labor"],
+    "ease_of_business": ["ease", "business friendly", "single window", "approval"],
+    "power": ["power", "electricity", "energy", "uptime", "reliable power"],
+}
+
+
+def _description_boosts(profile: SMEProfile) -> dict[str, float]:
+    """Return multiplicative boosts derived from product_description keywords."""
+    text = (profile.product_description or "").lower()
+    boosts: dict[str, float] = {}
+    for factor, kws in _DESC_KEYWORDS.items():
+        if any(k in text for k in kws):
+            boosts[factor] = 1.2
+    return boosts
+
+
 def resolve_weights(profile: SMEProfile) -> dict[str, float]:
     w = dict(DEFAULT_WEIGHTS.get(profile.product_category, DEFAULT_WEIGHTS["general"]))
     # Profile-driven adjustments
@@ -55,6 +79,13 @@ def resolve_weights(profile: SMEProfile) -> dict[str, float]:
         w["demand"] *= 1.3
     if profile.budget_usd < LOW_BUDGET_USD:
         w["cost"] *= 1.5
+    # Product-description keyword boosts
+    for factor, mult in _description_boosts(profile).items():
+        w[factor] *= mult
+    # Target-state focus: if user named specific states, boost logistics/cost slightly
+    if profile.target_states:
+        w["logistics"] *= 1.1
+        w["cost"] *= 1.05
     # Explicit user priorities override everything
     for k, v in profile.priority_weights.items():
         w[k] = max(0.0, float(v))

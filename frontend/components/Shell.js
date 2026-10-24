@@ -4,7 +4,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useApp } from "@/lib/context";
 import { useT } from "@/lib/i18n";
-import { seedDemo } from "@/lib/api";
 import CultureModal from "./CultureModal";
 
 const NAV = [
@@ -37,23 +36,10 @@ const STAGES = [
 export default function Shell({ children }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { lang, setLang, setSession, setDemoLoaded } = useApp();
+  const { lang, setLang, setSession, session } = useApp();
   const tr = useT(lang);
-  const [loadingDemo, setLoadingDemo] = useState(false);
+  const sess = session;
   const [showCulture, setShowCulture] = useState(false);
-
-  const handleLoadDemo = async () => {
-    setLoadingDemo(true);
-    try {
-      const s = await seedDemo("demo");
-      setSession(s);
-      setDemoLoaded(true);
-    } catch (e) {
-      console.error("Demo seed failed:", e);
-    } finally {
-      setLoadingDemo(false);
-    }
-  };
 
   const stageStatus = (href) => {
     const order = STAGES.map(s => s.href);
@@ -107,26 +93,18 @@ export default function Shell({ children }) {
           <div style={{ display: "flex", alignItems: "center", gap: 12, flex: 1 }}>
             <div style={{ fontSize: "0.72rem", color: "var(--text-muted)", display: "flex", flexDirection: "column" }}>
               <span style={{ fontWeight: 600, color: "var(--text-primary)", fontSize: "0.8rem" }}>Active Expansion Project</span>
-              <span>Tanaka Seiki — India Market Entry</span>
+              <span>{sess?.profile?.company || "India Market Entry"}</span>
             </div>
             <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 10 }}>
               <div className="lang-toggle">
                 <button className={`lang-btn ${lang === "ja" ? "active" : ""}`} onClick={() => setLang("ja")}>JA 日本語</button>
                 <button className={`lang-btn ${lang === "en" ? "active" : ""}`} onClick={() => setLang("en")}>EN English</button>
               </div>
-              <button
-                className="btn btn-secondary btn-sm"
-                onClick={handleLoadDemo}
-                disabled={loadingDemo}
-              >
-                {loadingDemo ? <span className="spinner" style={{ width: 14, height: 14 }} /> : "⚡"}
-                {tr("loadDemo")}
-              </button>
               <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 12px", background: "var(--bg)", borderRadius: "var(--radius-sm)", border: "1px solid var(--border)" }}>
-                <div style={{ width: 28, height: 28, borderRadius: "50%", background: "var(--primary)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.72rem", fontWeight: 700 }}>KT</div>
+                <div style={{ width: 28, height: 28, borderRadius: "50%", background: "var(--primary)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.72rem", fontWeight: 700 }}>{(sess?.profile?.company || "C").charAt(0)}</div>
                 <div style={{ fontSize: "0.76rem" }}>
-                  <div style={{ fontWeight: 600, color: "var(--text-primary)" }}>Kenji Tanaka</div>
-                  <div style={{ color: "var(--text-muted)" }}>Senior Director</div>
+                  <div style={{ fontWeight: 600, color: "var(--text-primary)" }}>{sess?.profile?.company || "Company Contact"}</div>
+                  <div style={{ color: "var(--text-muted)" }}>{sess?.profile?.customer_type || "India Market Entry"}</div>
                 </div>
               </div>
             </div>

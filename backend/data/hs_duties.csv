@@ -7,3 +7,4 @@ hs_code,description,bcd_rate,sws_rate,igst_rate,effective_duty,verification_stat
 8531.80.00,"Sound or visual signaling apparatus (e.g., Industrial proximity alarm sensors / acoustic sensors)",10.0%,10% on BCD (1.00%),18%,30.98%,verify against CBIC,CBIC Customs Tariff Chapter 85
 9032.89.10,Automatic regulating or controlling instruments - Electronic automatic regulators / PID sensor controllers,7.5%,10% on BCD (0.75%),18%,26.98%,verify against CBIC,CBIC Customs Tariff Chapter 90
 8542.31.00,Electronic integrated circuits - Processors and controllers (incorporating MEMS sensor elements),0.0%,0.0%,18%,18.00%,verify against CBIC,ITA-1 Agreement / CBIC Notification
+8543.70.90,"Electrical machines and apparatus, having individual functions, not specified or included elsewhere (e.g., signal generators, other electrical apparatus)",7.5%,10% on BCD (0.75%),18%,27.74%,verify against CBIC,CBIC Customs Tariff Chapter 85 / ICEGATE 2024-26

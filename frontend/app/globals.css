@@ -462,22 +462,6 @@ a { color: inherit; text-decoration: none; }
 }
 .citation-chip:hover { background: #dbeafe; transform: translateY(-1px); }
 
-/* ── Demo label ──────────────────────────────────────────────────────────── */
-.demo-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 8px;
-  background: rgba(217,119,6,0.12);
-  border: 1px solid rgba(217,119,6,0.3);
-  border-radius: 4px;
-  font-size: 0.67rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--tertiary);
-}
-
 /* ── Skeleton loaders ────────────────────────────────────────────────────── */
 @keyframes shimmer {
   0% { background-position: -200% 0; }

@@ -2,9 +2,9 @@
 import { useState, useEffect } from "react";
 import { useApp } from "@/lib/context";
 import { useT } from "@/lib/i18n";
-import { rankPartners, listPartners, getPartnerTrust } from "@/lib/api";
+import { rankPartners, listPartners, getPartnerTrust, patchSession } from "@/lib/api";
 import {
-  ScoreBadge, TierBadge, FactorBreakdown, DemoLabel,
+  ScoreBadge, TierBadge, FactorBreakdown,
   LoadingState, ErrorState, EmptyState, RiskFlag, Skeleton
 } from "@/components/UI";
 
@@ -20,7 +20,7 @@ const DEFAULT_REQ = {
 };
 
 export default function MatchPage() {
-  const { lang, session } = useApp();
+  const { lang, session, setSession } = useApp();
   const tr = useT(lang);
   const [partners, setPartners] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -36,6 +36,8 @@ export default function MatchPage() {
     try {
       const data = await rankPartners(req);
       setPartners(data.results || []);
+      setSession({ ...session, match: data.results || [] });
+      try { await patchSession(session.session_id, { match: data.results || [] }); } catch {}
     } catch (e) {
       // Try list partners as fallback
       try {
@@ -75,7 +77,6 @@ export default function MatchPage() {
           </p>
         </div>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          {session?.profile?.demo && <DemoLabel />}
           <button className="btn btn-outline btn-sm" onClick={() => setShowFilters(!showFilters)}>⚙ Filters</button>
           <button className="btn btn-primary btn-sm" onClick={fetchPartners} disabled={loading}>
             {loading ? <span className="spinner" style={{ width: 14, height: 14 }} /> : "↺"} Re-rank
