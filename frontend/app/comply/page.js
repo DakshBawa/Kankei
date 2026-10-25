@@ -113,7 +113,7 @@ export default function ComplyPage() {
     <div className="animate-fadeIn">
       <div className="section-header" style={{ marginBottom: 20 }}>
         <div>
-          <h1 className="section-title" style={{ fontSize: "1.3rem" }}>✅ Compliance & GTM</h1>
+          <h1 className="section-title" style={{ fontSize: "1.3rem" }}>Compliance & GTM</h1>
           <p style={{ color: "var(--text-secondary)", fontSize: "0.82rem", marginTop: 4 }}>
             Regulatory roadmap, landed cost calculator, and compliance checklist
           </p>
@@ -121,8 +121,8 @@ export default function ComplyPage() {
       </div>
 
       <div className="tabs">
-        <button className={`tab ${tab === "checklist" ? "active" : ""}`} onClick={() => setTab("checklist")}>📋 Regulatory Roadmap</button>
-        <button className={`tab ${tab === "landed" ? "active" : ""}`} onClick={() => setTab("landed")}>💰 Landed Cost</button>
+        <button className={`tab ${tab === "checklist" ? "active" : ""}`} onClick={() => setTab("checklist")}>Regulatory Roadmap</button>
+        <button className={`tab ${tab === "landed" ? "active" : ""}`} onClick={() => setTab("landed")}>Landed Cost</button>
       </div>
 
       {/* ── Compliance Checklist tab ── */}
@@ -167,7 +167,7 @@ export default function ComplyPage() {
               </div>
               <div className="form-group" style={{ display: "flex", alignItems: "flex-end" }}>
                 <button className="btn btn-primary w-full" onClick={fetchChecklist} disabled={clLoading}>
-                  {clLoading ? <span className="spinner" style={{ width: 14, height: 14 }} /> : "↺"} Generate Roadmap
+                  {clLoading ? <span className="spinner" style={{ width: 14, height: 14 }} /> : ""} Generate Roadmap
                 </button>
               </div>
             </div>
@@ -242,7 +242,7 @@ export default function ComplyPage() {
                               </div>
                             )}
                             <div style={{ marginTop: 8, fontSize: "0.72rem", color: "var(--text-muted)", fontStyle: "italic" }}>
-                              ⚠ Disclaimer: This is AI-generated guidance only. Consult a qualified Indian legal or compliance advisor for authoritative advice.
+                              Disclaimer: This is AI-generated guidance only. Consult a qualified Indian legal or compliance advisor for authoritative advice.
                             </div>
                           </div>
                         )}
@@ -324,7 +324,7 @@ export default function ComplyPage() {
               </div>
             </div>
             <button className="btn btn-primary btn-sm" onClick={fetchLandedCost} disabled={lcLoading || !lcReq.hs_code}>
-              {lcLoading ? <span className="spinner" style={{ width: 14, height: 14 }} /> : "💰"} Calculate Landed Cost
+              {lcLoading ? <span className="spinner" style={{ width: 14, height: 14 }} /> : ""} Calculate Landed Cost
             </button>
           </div>
 
@@ -384,11 +384,11 @@ export default function ComplyPage() {
 
                 {lcResult.notes?.length > 0 && (
                   <div style={{ marginTop: 12, fontSize: "0.76rem", color: "var(--text-muted)" }}>
-                    {lcResult.notes.map((n, i) => <div key={i}>ℹ {n}</div>)}
+                    {lcResult.notes.map((n, i) => <div key={i}>{n}</div>)}
                   </div>
                 )}
                 <div style={{ marginTop: 10, fontSize: "0.72rem", color: "var(--text-muted)", fontStyle: "italic" }}>
-                  Source: {lcResult.source} — ⚠ Verify current rates with Indian Customs before finalising import budgets.
+                  Source: {lcResult.source} — Verify current rates with Indian Customs before finalising import budgets.
                 </div>
               </div>
             </div>

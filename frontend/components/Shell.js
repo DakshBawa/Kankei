@@ -10,18 +10,18 @@ const NAV = [
   {
     section: "EXECUTIVE MODULES",
     items: [
-      { href: "/", label: "journeyOverview", sub: "executiveCommand", icon: "⊞" },
-      { href: "/research", label: "research", sub: "researchSub", icon: "🔭" },
-      { href: "/match", label: "match", sub: "matchSub", icon: "🤝" },
-      { href: "/comply", label: "comply", sub: "complySub", icon: "✅" },
-      { href: "/gtm", label: "launch", sub: "launchSub", icon: "🚀" },
+      { href: "/", label: "journeyOverview", sub: "executiveCommand", icon: "" },
+      { href: "/research", label: "research", sub: "researchSub", icon: "" },
+      { href: "/match", label: "match", sub: "matchSub", icon: "" },
+      { href: "/comply", label: "comply", sub: "complySub", icon: "" },
+      { href: "/gtm", label: "launch", sub: "launchSub", icon: "" },
     ],
   },
   {
     section: "ADVISORY & INTELLIGENCE",
     items: [
-      { href: "/culture", label: "culture", sub: "cultureSub", icon: "🌐" },
-      { href: "/onboard", label: "vault", sub: "vaultSub", icon: "📁" },
+      { href: "/culture", label: "culture", sub: "cultureSub", icon: "" },
+      { href: "/onboard", label: "vault", sub: "vaultSub", icon: "" },
     ],
   },
 ];
@@ -117,7 +117,7 @@ export default function Shell({ children }) {
             const status = stageStatus(s.href);
             return (
               <Link key={s.href} href={s.href} className={`pipeline-stage ${status}`}>
-                <span className="stage-num">{status === "done" ? "✓" : s.num}</span>
+                <span className="stage-num">{status === "done" ? "" : s.num}</span>
                 {s.label}
               </Link>
             );
@@ -127,7 +127,7 @@ export default function Shell({ children }) {
               className="btn btn-primary btn-sm"
               onClick={() => setShowCulture(true)}
             >
-              🌐 Culture &amp; Negotiation Copilot
+              Culture & Negotiation Copilot
             </button>
           </div>
         </div>
@@ -140,7 +140,7 @@ export default function Shell({ children }) {
 
       {/* Culture FAB */}
       <button className="culture-fab" onClick={() => setShowCulture(true)}>
-        🌐 Culture Copilot
+        Culture Copilot
       </button>
 
       {showCulture && <CultureModal onClose={() => setShowCulture(false)} />}

@@ -103,7 +103,6 @@ def _match_entries(text: str, direction: str) -> list[PlaybookEntry]:
     t_norm = _norm(text)
 
     matched_target = []
-    matched_other = []
 
     for entry in _VALIDATED_ENTRIES:
         aliases = JA_ALIASES.get(entry.id, []) + IN_ALIASES.get(entry.id, [])
@@ -117,13 +116,10 @@ def _match_entries(text: str, direction: str) -> list[PlaybookEntry]:
                 matched = True
                 break
 
-        if matched:
-            if entry.direction == direction:
-                matched_target.append(entry)
-            else:
-                matched_other.append(entry)
+        if matched and entry.direction == direction:
+            matched_target.append(entry)
 
-    return matched_target + matched_other
+    return matched_target
 
 
 def check_phrases(text: str) -> list[PhraseHit]:
@@ -135,7 +131,7 @@ def check_phrases(text: str) -> list[PhraseHit]:
 
     for entry in _VALIDATED_ENTRIES:
         aliases = JA_ALIASES.get(entry.id, []) + IN_ALIASES.get(entry.id, [])
-        patterns = [entry.pattern] + aliases
+        patterns = [entry.pattern, entry.literal] + aliases
 
         matched_variant = None
         for p in patterns:
@@ -191,7 +187,7 @@ def coach(
 
     # Normalize direction to JP_to_IN or IN_to_JP
     dir_str = str(raw_dir).lower()
-    norm_dir = "JP_to_IN" if ("jp" in dir_str or "ja" in dir_str) else "IN_to_JP"
+    norm_dir = "IN_to_JP" if dir_str.startswith("in") else "JP_to_IN"
 
     matched = _match_entries(msg, norm_dir)
     hits = []

@@ -6,7 +6,7 @@ Endpoints
   PATCH /session/{id}       shallow-merge keys into the state
 
 The submitted company profile is persisted in the `sessions` table so that every
-pipeline stage (research → match → comply → gtm) can read it by session id.
+pipeline stage (research to match to comply to gtm) can read it by session id.
 There is no demo / seed-demo mode: only data entered through the onboarding
 form is stored.
 """

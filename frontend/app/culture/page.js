@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useApp } from "@/lib/context";
 import { useT } from "@/lib/i18n";
-import { getPlaybook, coachMessage, checkPhrase } from "@/lib/api";
+import { coachMessage, checkPhrase } from "@/lib/api";
 import {
   LoadingState, ErrorState, EmptyState, RiskFlag
 } from "@/components/UI";
@@ -11,10 +11,6 @@ export default function CulturePage() {
   const { lang, session } = useApp();
   const tr = useT(lang);
   const [tab, setTab] = useState("coach");
-  const [playbook, setPlaybook] = useState(null);
-  const [pbLoading, setPbLoading] = useState(false);
-
-  // Coach state
   const [message, setMessage] = useState("");
   const [direction, setDirection] = useState("ja_to_in");
   const [context, setContext] = useState("");
@@ -27,13 +23,6 @@ export default function CulturePage() {
   const [phraseResult, setPhraseResult] = useState(null);
   const [phraseLoading, setPhraseLoading] = useState(false);
   const [phraseError, setPhraseError] = useState(null);
-
-  useEffect(() => {
-    if (tab === "playbook" && !playbook) {
-      setPbLoading(true);
-      getPlaybook().then(setPlaybook).catch(() => {}).finally(() => setPbLoading(false));
-    }
-  }, [tab]);
 
   const handleCoach = async () => {
     if (!message.trim()) return;
@@ -72,9 +61,9 @@ export default function CulturePage() {
     <div className="animate-fadeIn">
       <div className="section-header" style={{ marginBottom: 20 }}>
         <div>
-          <h1 className="section-title" style={{ fontSize: "1.3rem" }}>🌐 Cultural Intelligence</h1>
+          <h1 className="section-title" style={{ fontSize: "1.3rem" }}>Cultural Intelligence</h1>
           <p style={{ color: "var(--text-secondary)", fontSize: "0.82rem", marginTop: 4 }}>
-            Bi-directional Japan ↔ India communication intelligence & negotiation guidance
+            Bi-directional Japan-India communication intelligence & negotiation guidance
           </p>
         </div>
       </div>
@@ -82,7 +71,7 @@ export default function CulturePage() {
       {/* Quick explanation card */}
       <div className="card" style={{ marginBottom: 20, background: "linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%)", color: "#fff", border: "none" }}>
         <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
-          <span style={{ fontSize: "2rem" }}>🌸</span>
+          <span style={{ fontSize: "2rem" }}>•</span>
           <div>
             <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "1rem", fontWeight: 700, marginBottom: 6 }}>
               Culture & Negotiation Copilot
@@ -97,9 +86,8 @@ export default function CulturePage() {
       </div>
 
       <div className="tabs">
-        <button className={`tab ${tab === "coach" ? "active" : ""}`} onClick={() => setTab("coach")}>🔍 Message Coach</button>
-        <button className={`tab ${tab === "phrase" ? "active" : ""}`} onClick={() => setTab("phrase")}>⚡ Phrase Check</button>
-        <button className={`tab ${tab === "playbook" ? "active" : ""}`} onClick={() => setTab("playbook")}>📖 Negotiation Playbook</button>
+        <button className={`tab ${tab === "coach" ? "active" : ""}`} onClick={() => setTab("coach")}>Message Coach</button>
+        <button className={`tab ${tab === "phrase" ? "active" : ""}`} onClick={() => setTab("phrase")}>Phrase Check</button>
       </div>
 
       {/* ── Message Coach ── */}
@@ -112,8 +100,8 @@ export default function CulturePage() {
                 <div className="form-group">
                   <label className="form-label">Direction</label>
                   <select className="form-input form-select" value={direction} onChange={e => setDirection(e.target.value)}>
-                    <option value="ja_to_in">Japanese → Indian</option>
-                    <option value="in_to_ja">Indian → Japanese</option>
+                    <option value="ja_to_in">Japanese to Indian</option>
+                    <option value="in_to_ja">Indian to Japanese</option>
                   </select>
                 </div>
                 <div className="form-group">
@@ -127,7 +115,7 @@ export default function CulturePage() {
                     placeholder="e.g. Price negotiation with Gujarat distributor" />
                 </div>
                 <button className="btn btn-primary w-full" onClick={handleCoach} disabled={coachLoading || !message.trim()}>
-                  {coachLoading ? <span className="spinner" style={{ width: 14, height: 14 }} /> : "🔍"} Analyze Communication
+                  {coachLoading ? <span className="spinner" style={{ width: 14, height: 14 }} /> : ""} Analyze Communication
                 </button>
               </div>
 
@@ -156,7 +144,7 @@ export default function CulturePage() {
                   {/* Phrase hits */}
                   {coachResult.phrase_hits?.length > 0 && (
                     <div className="card" style={{ marginBottom: 16 }}>
-                      <div className="card-title" style={{ marginBottom: 12 }}>⚡ Cultural Phrase Flags</div>
+                      <div className="card-title" style={{ marginBottom: 12 }}>Cultural Phrase Flags</div>
                       {coachResult.phrase_hits.map((hit, i) => (
                         <div key={i} style={{ padding: "10px 0", borderBottom: i < coachResult.phrase_hits.length - 1 ? "1px solid var(--border)" : "none" }}>
                           <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 4 }}>
@@ -178,7 +166,7 @@ export default function CulturePage() {
                   {/* Risks */}
                   {coachResult.risks?.length > 0 && (
                     <div className="card" style={{ marginBottom: 16 }}>
-                      <div className="card-title" style={{ marginBottom: 12 }}>⚠ Communication Risks</div>
+                      <div className="card-title" style={{ marginBottom: 12 }}>Communication Risks</div>
                       {coachResult.risks.map((r, i) => (
                         <RiskFlag key={i} flag={`[${r.dimension}] ${r.issue} — ${r.why}`} level="amber" />
                       ))}
@@ -188,7 +176,7 @@ export default function CulturePage() {
                   {/* Rewritten message */}
                   {coachResult.rewritten_message && (
                     <div className="card" style={{ marginBottom: 16, background: "#f0fdf4", borderColor: "#86efac" }}>
-                      <div style={{ fontWeight: 700, color: "var(--success)", marginBottom: 8, fontSize: "0.84rem" }}>✓ Suggested Rewrite</div>
+                      <div style={{ fontWeight: 700, color: "var(--success)", marginBottom: 8, fontSize: "0.84rem" }}>Suggested Rewrite</div>
                       <p style={{ fontSize: "0.86rem", color: "#065f46", lineHeight: 1.7, fontStyle: "italic" }}>
                         "{coachResult.rewritten_message}"
                       </p>
@@ -198,7 +186,7 @@ export default function CulturePage() {
                   {/* Delivery tips */}
                   {coachResult.delivery_tips?.length > 0 && (
                     <div className="card">
-                      <div className="card-title" style={{ marginBottom: 10 }}>💡 Delivery Tips</div>
+                      <div className="card-title" style={{ marginBottom: 10 }}>Delivery Tips</div>
                       <ul style={{ paddingLeft: 16, fontSize: "0.82rem", color: "var(--text-secondary)", lineHeight: 1.8 }}>
                         {coachResult.delivery_tips.map((tip, i) => <li key={i}>{tip}</li>)}
                       </ul>
@@ -230,7 +218,7 @@ export default function CulturePage() {
                 placeholder="Enter text to check for cultural phrases…" style={{ resize: "none" }} />
             </div>
             <button className="btn btn-primary" onClick={handlePhraseCheck} disabled={phraseLoading || !phraseText.trim()}>
-              {phraseLoading ? <span className="spinner" style={{ width: 14, height: 14 }} /> : "⚡"} Check Phrases
+              {phraseLoading ? <span className="spinner" style={{ width: 14, height: 14 }} /> : ""} Check Phrases
             </button>
           </div>
 
@@ -241,7 +229,7 @@ export default function CulturePage() {
               {phraseResult.length === 0 ? (
                 <div className="card">
                   <div style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--success)", fontWeight: 600 }}>
-                    ✓ No culturally ambiguous phrases detected.
+                    No culturally ambiguous phrases detected.
                   </div>
                 </div>
               ) : (
@@ -268,47 +256,6 @@ export default function CulturePage() {
         </div>
       )}
 
-      {/* ── Negotiation Playbook ── */}
-      {tab === "playbook" && (
-        <div className="animate-fadeIn">
-          {pbLoading ? (
-            <div className="card"><LoadingState text="Loading negotiation playbook…" /></div>
-          ) : playbook ? (
-            <div>
-              {Object.entries(playbook).map(([section, items]) => (
-                <div key={section} style={{ marginBottom: 24 }}>
-                  <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "1rem", fontWeight: 700, color: "var(--primary)", marginBottom: 12, textTransform: "capitalize" }}>
-                    {section.replace(/_/g, " ")}
-                  </h2>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 12 }}>
-                    {(Array.isArray(items) ? items : Object.entries(items)).map((item, i) => (
-                      <div key={i} className="card" style={{ padding: "14px 16px" }}>
-                        {typeof item === "string" ? (
-                          <p style={{ fontSize: "0.82rem", color: "var(--text-secondary)", lineHeight: 1.6 }}>{item}</p>
-                        ) : Array.isArray(item) ? (
-                          <div>
-                            <div style={{ fontWeight: 600, fontSize: "0.84rem", marginBottom: 4 }}>{item[0]}</div>
-                            <p style={{ fontSize: "0.78rem", color: "var(--text-secondary)", lineHeight: 1.6 }}>{typeof item[1] === "string" ? item[1] : JSON.stringify(item[1])}</p>
-                          </div>
-                        ) : (
-                          <div>
-                            {item.phrase && <div style={{ fontWeight: 600, marginBottom: 4, fontSize: "0.84rem" }}>{item.phrase}</div>}
-                            {item.meaning && <div style={{ fontSize: "0.78rem", color: "var(--text-secondary)" }}><strong>Meaning:</strong> {item.meaning}</div>}
-                            {item.perceived && <div style={{ fontSize: "0.78rem", color: "#dc2626" }}><strong>Perceived:</strong> {item.perceived}</div>}
-                            {item.tip && <div style={{ fontSize: "0.78rem", color: "var(--success)", marginTop: 4 }}>💡 {item.tip}</div>}
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <EmptyState title="No playbook loaded" description="Click the 'Negotiation Playbook' tab to load guidance." />
-          )}
-        </div>
-      )}
     </div>
   );
 }

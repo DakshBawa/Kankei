@@ -46,13 +46,13 @@ export default function CultureModal({ onClose }) {
         <div className="drawer-header">
           <div>
             <h2 style={{ fontSize: "1rem", fontWeight: 700, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-              🌐 Culture &amp; Negotiation Copilot
+              Culture & Negotiation Copilot
             </h2>
             <p style={{ fontSize: "0.76rem", color: "var(--text-muted)", marginTop: 2 }}>
-              Bi-directional Japan ↔ India communication intelligence
+              Bi-directional Japan-India communication intelligence
             </p>
           </div>
-          <button className="btn btn-ghost btn-sm" onClick={onClose}>✕</button>
+          <button className="btn btn-ghost btn-sm" onClick={onClose}>X</button>
         </div>
         <div className="drawer-body">
           <div className="tabs" style={{ marginBottom: 16 }}>
@@ -76,8 +76,8 @@ export default function CultureModal({ onClose }) {
               <div className="form-group">
                 <label className="form-label">Direction</label>
                 <select className="form-input form-select" value={direction} onChange={(e) => setDirection(e.target.value)}>
-                  <option value="ja_to_in">Japanese → Indian</option>
-                  <option value="in_to_ja">Indian → Japanese</option>
+                  <option value="ja_to_in">Japanese to Indian</option>
+                  <option value="in_to_ja">Indian to Japanese</option>
                 </select>
               </div>
               <div className="form-group">
@@ -85,7 +85,7 @@ export default function CultureModal({ onClose }) {
                 <input className="form-input" value={context} onChange={(e) => setContext(e.target.value)} placeholder="e.g. Price negotiation with distributor in Gujarat" />
               </div>
               <button className="btn btn-primary w-full" onClick={handleCoach} disabled={loading || !message.trim()}>
-                {loading ? <span className="spinner" /> : "🔍"} Analyze Message
+                {loading ? <span className="spinner" /> : ""} Analyze Message
               </button>
             </>
           )}
@@ -104,7 +104,7 @@ export default function CultureModal({ onClose }) {
                 />
               </div>
               <button className="btn btn-primary w-full" onClick={handlePhraseCheck} disabled={loading || !message.trim()}>
-                {loading ? <span className="spinner" /> : "🔍"} Check Phrases
+                {loading ? <span className="spinner" /> : ""} Check Phrases
               </button>
             </>
           )}
@@ -117,7 +117,7 @@ export default function CultureModal({ onClose }) {
               {/* Phrase hits */}
               {result.phrase_hits?.length > 0 && (
                 <div className="card" style={{ marginBottom: 16 }}>
-                  <div className="card-title" style={{ marginBottom: 12 }}>⚡ Phrase Flags</div>
+                  <div className="card-title" style={{ marginBottom: 12 }}>Phrase Flags</div>
                   {result.phrase_hits.map((hit, i) => (
                     <div key={i} style={{ padding: "10px 0", borderBottom: "1px solid var(--border)" }}>
                       <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 4 }}>
@@ -138,7 +138,7 @@ export default function CultureModal({ onClose }) {
               {/* Risks */}
               {result.risks?.length > 0 && (
                 <div style={{ marginBottom: 16 }}>
-                  <div style={{ fontSize: "0.8rem", fontWeight: 700, marginBottom: 8, color: "var(--text-primary)" }}>⚠ Communication Risks</div>
+                  <div style={{ fontSize: "0.8rem", fontWeight: 700, marginBottom: 8, color: "var(--text-primary)" }}>Communication Risks</div>
                   {result.risks.map((r, i) => (
                     <RiskFlag key={i} flag={`[${r.dimension}] ${r.issue} — ${r.why}`} level="amber" />
                   ))}
@@ -148,7 +148,7 @@ export default function CultureModal({ onClose }) {
               {/* Rewritten message */}
               {result.rewritten_message && (
                 <div className="card" style={{ marginBottom: 16, background: "#f0fdf4", borderColor: "#86efac" }}>
-                  <div className="card-title" style={{ marginBottom: 8, color: "var(--success)" }}>✓ Suggested Rewrite</div>
+                  <div className="card-title" style={{ marginBottom: 8, color: "var(--success)" }}>Suggested Rewrite</div>
                   <p style={{ fontSize: "0.84rem", color: "#065f46", lineHeight: 1.6 }}>{result.rewritten_message}</p>
                 </div>
               )}
@@ -156,7 +156,7 @@ export default function CultureModal({ onClose }) {
               {/* Delivery tips */}
               {result.delivery_tips?.length > 0 && (
                 <div>
-                  <div style={{ fontSize: "0.8rem", fontWeight: 700, marginBottom: 8 }}>💡 Delivery Tips</div>
+                  <div style={{ fontSize: "0.8rem", fontWeight: 700, marginBottom: 8 }}>Delivery Tips</div>
                   <ul style={{ paddingLeft: 16, fontSize: "0.82rem", color: "var(--text-secondary)", lineHeight: 1.7 }}>
                     {result.delivery_tips.map((tip, i) => <li key={i}>{tip}</li>)}
                   </ul>

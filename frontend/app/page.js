@@ -49,11 +49,11 @@ export default function Home() {
       <div style={{ marginBottom: 20 }}>
         {healthErr ? (
           <div className="error-state" style={{ padding: "10px 16px" }}>
-            ⚠ Backend unreachable: {healthErr} — running in mock mode
+            Backend unreachable: {healthErr} — running in mock mode
           </div>
         ) : health ? (
           <div style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: "var(--radius-sm)", padding: "10px 16px", fontSize: "0.78rem", color: "#065f46", display: "flex", alignItems: "center", gap: 8 }}>
-            ✓ Backend online · {health.data?.states} states · {health.data?.partners} partners · {health.data?.hs_codes} HS codes
+            Backend online · {health.data?.states} states · {health.data?.partners} partners · {health.data?.hs_codes} HS codes
           </div>
         ) : (
           <div className="skeleton" style={{ height: 36, borderRadius: "var(--radius-sm)" }} />
@@ -114,7 +114,7 @@ export default function Home() {
             <Link key={stage.num} href={stage.href} style={{ textDecoration: "none" }}>
               <div style={{ padding: 16, borderRadius: "var(--radius)", border: `1px solid ${stage.done ? stage.color : "var(--border)"}`, background: stage.done ? `${stage.color}0d` : "var(--bg)", transition: "all 0.2s", cursor: "pointer" }} onMouseEnter={(e) => e.currentTarget.style.transform = "translateY(-2px)"} onMouseLeave={(e) => e.currentTarget.style.transform = ""}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-                  <span style={{ width: 28, height: 28, borderRadius: "50%", background: stage.done ? stage.color : "var(--border)", color: stage.done ? "#fff" : "var(--text-muted)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.72rem", fontWeight: 700 }}>{stage.done ? "✓" : stage.num}</span>
+                  <span style={{ width: 28, height: 28, borderRadius: "50%", background: stage.done ? stage.color : "var(--border)", color: stage.done ? "#fff" : "var(--text-muted)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.72rem", fontWeight: 700 }}>{stage.done ? "" : stage.num}</span>
                   <span style={{ fontSize: "0.82rem", fontWeight: 700, color: stage.done ? stage.color : "var(--text-secondary)" }}>{stage.done ? "Complete" : "Upcoming"}</span>
                 </div>
                 <div style={{ fontWeight: 700, color: "var(--text-primary)", fontSize: "0.9rem", marginBottom: 4, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{stage.label}</div>
@@ -124,14 +124,14 @@ export default function Home() {
           ))}
         </div>
         <div style={{ marginTop: 16, paddingTop: 12, borderTop: "1px solid var(--border)", fontSize: "0.78rem", color: "var(--text-muted)" }}>
-          {topState ? "✓ Top target state ranked" : "○ Run Research to rank target states"} &nbsp;·&nbsp;{partnerCount > 0 ? "✓ Partners matched" : "○ Run Partner Matching to shortlist partners"} &nbsp;·&nbsp;{complianceItems > 0 ? "✓ Compliance steps identified" : "○ Run Compliance to generate regulatory roadmap"} &nbsp;·&nbsp;{gtm ? "✓ GTM strategy ready" : "○ Run GTM to build price waterfall"}
+          {topState ? "Top target state ranked" : "Run Research to rank target states"} &nbsp;·&nbsp;{partnerCount > 0 ? "Partners matched" : "Run Partner Matching to shortlist partners"} &nbsp;·&nbsp;{complianceItems > 0 ? "Compliance steps identified" : "Run Compliance to generate regulatory roadmap"} &nbsp;·&nbsp;{gtm ? "GTM strategy ready" : "Run GTM to build price waterfall"}
         </div>
       </div>
 
       {/* Metric grid */}
       <div className="metric-grid" style={{ marginBottom: 28 }}>
         <div className="metric-card" style={{ borderTop: "3px solid var(--secondary)" }}>
-          <div className="metric-label">📍 Target State</div>
+          <div className="metric-label">Target State</div>
           <div className="metric-value" style={{ fontSize: "1.4rem" }}>
             {topState ? topState.state : "—"}
           </div>
@@ -143,7 +143,7 @@ export default function Home() {
         </div>
 
         <div className="metric-card" style={{ borderTop: "3px solid var(--primary)" }}>
-          <div className="metric-label">🤝 Partner Pipeline</div>
+          <div className="metric-label">Partner Pipeline</div>
           <div className="metric-value">{partnerCount || "—"}</div>
           <div className="metric-sub">
             {partnerCount ? `${partnerCount} vetted partners matched` : "Run Partner Matching phase"}
@@ -151,7 +151,7 @@ export default function Home() {
         </div>
 
         <div className="metric-card" style={{ borderTop: "3px solid var(--tertiary)" }}>
-          <div className="metric-label">✅ Compliance Items</div>
+          <div className="metric-label">Compliance Items</div>
           <div className="metric-value">{complianceItems || "—"}</div>
           <div className="metric-sub">
             {complianceItems ? `${complianceItems} regulatory steps identified` : "Run Compliance phase"}
@@ -159,7 +159,7 @@ export default function Home() {
         </div>
 
         <div className="metric-card" style={{ borderTop: "3px solid var(--success)" }}>
-          <div className="metric-label">🚀 GTM Strategy</div>
+          <div className="metric-label">GTM Strategy</div>
           <div className="metric-value" style={{ fontSize: "1.1rem" }}>
             {gtm?.recommendation?.results?.[0]?.model?.replace(/_/g, " ") || "—"}
           </div>

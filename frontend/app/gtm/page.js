@@ -101,7 +101,7 @@ export default function GTMPage() {
     <div className="animate-fadeIn">
       <div className="section-header" style={{ marginBottom: 20 }}>
         <div>
-          <h1 className="section-title" style={{ fontSize: "1.3rem" }}>🚀 Go-to-Market</h1>
+          <h1 className="section-title" style={{ fontSize: "1.3rem" }}>Go-to-Market</h1>
           <p style={{ color: "var(--text-secondary)", fontSize: "0.82rem", marginTop: 4 }}>
             Price waterfall, GTM model comparison, and market entry strategy
           </p>
@@ -170,7 +170,7 @@ export default function GTMPage() {
               {/* KPI row */}
               <div className="metric-grid" style={{ marginBottom: 20 }}>
                 <div className="metric-card">
-                  <div className="metric-label">💰 Landed Cost (excl. IGST)</div>
+                  <div className="metric-label">Landed Cost (excl. IGST)</div>
                   <div className="metric-value">{fmt(wfResult.landed_cost_inr)}</div>
                 </div>
                 <div className="metric-card">
@@ -325,7 +325,7 @@ export default function GTMPage() {
           {mrResult && (
             <div className="animate-fadeIn">
               <div style={{ marginBottom: 12, fontSize: "0.76rem", color: "var(--text-muted)" }}>
-                {mrResult.notes?.map((n, i) => <div key={i}>ℹ {n}</div>)}
+                {mrResult.notes?.map((n, i) => <div key={i}>{n}</div>)}
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 {mrResult.results?.map((opt, i) => (
@@ -336,7 +336,7 @@ export default function GTMPage() {
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
                       <div>
                         <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 4 }}>
-                          {i === 0 && <span className="chip success">★ Recommended</span>}
+                          {i === 0 && <span className="chip success">Recommended</span>}
                           <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "1rem", fontWeight: 700 }}>
                             {opt.model?.replace(/_/g, " ")}
                           </h3>
@@ -349,7 +349,7 @@ export default function GTMPage() {
                         <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", marginBottom: 2 }}>Fit Score</div>
                         <ScoreBadge score={opt.score * 10} />
                         <div style={{ fontSize: "0.72rem", color: opt.budget_ok ? "var(--success)" : "var(--danger)", marginTop: 4 }}>
-                          {opt.budget_ok ? "✓ Budget OK" : "⚠ Budget tight"}
+                          {opt.budget_ok ? "Budget OK" : "Budget tight"}
                           {" · Min "}${opt.indicative_min_budget_usd?.toLocaleString()}
                         </div>
                       </div>

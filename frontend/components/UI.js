@@ -46,8 +46,8 @@ export function CitationChip({ citation }) {
   return (
     <>
       <span className="citation-chip" onClick={() => setOpen(!open)} title={citation.source}>
-        🔗 [{citation.chunk_id}]
-        {citation.unverified && <span style={{ color: "#f59e0b" }}>⚠</span>}
+        [{citation.chunk_id}]
+        {citation.unverified && <span style={{ color: "#f59e0b" }}>!</span>}
       </span>
       {open && (
         <div style={{
@@ -57,9 +57,9 @@ export function CitationChip({ citation }) {
           <div style={{ fontWeight: 600, marginBottom: 4 }}>{citation.title || citation.source}</div>
           <p style={{ color: "#374151", lineHeight: 1.5 }}>{citation.snippet}</p>
           <div style={{ marginTop: 6, display: "flex", gap: 12, color: "#6b7280" }}>
-            {citation.source_url && <a href={citation.source_url} target="_blank" rel="noopener noreferrer" style={{ color: "#2563eb" }}>↗ Source</a>}
+            {citation.source_url && <a href={citation.source_url} target="_blank" rel="noopener noreferrer" style={{ color: "#2563eb" }}>Source</a>}
             <span>Last verified: {citation.last_verified || "UNVERIFIED"}</span>
-            {citation.unverified && <span style={{ color: "#f59e0b" }}>⚠ Not officially verified</span>}
+            {citation.unverified && <span style={{ color: "#f59e0b" }}>Not officially verified</span>}
           </div>
         </div>
       )}
@@ -88,7 +88,7 @@ export function LoadingState({ text = "Loading…" }) {
 export function ErrorState({ message, onRetry }) {
   return (
     <div className="error-state">
-      <span style={{ fontSize: "1.2rem" }}>⚠</span>
+      <span style={{ fontSize: "1.2rem" }}>!</span>
       <div>
         <div style={{ fontWeight: 600, marginBottom: 4 }}>Something went wrong</div>
         <div style={{ fontSize: "0.78rem" }}>{message}</div>
@@ -101,7 +101,7 @@ export function ErrorState({ message, onRetry }) {
 export function EmptyState({ title = "No data", description = "Nothing to show here yet." }) {
   return (
     <div className="empty-state">
-      <div style={{ fontSize: "2.5rem", marginBottom: 12, opacity: 0.3 }}>📭</div>
+      <div style={{ fontSize: "2.5rem", marginBottom: 12, opacity: 0.3 }}>•</div>
       <h3>{title}</h3>
       <p>{description}</p>
     </div>
@@ -124,7 +124,7 @@ export function Skeleton({ type = "text", count = 3 }) {
 export function RiskFlag({ flag, level = "amber" }) {
   return (
     <div className={`risk-flag ${level}`}>
-      <span>{level === "red" ? "🔴" : level === "amber" ? "🟡" : "🟢"}</span>
+      <span>{level === "red" ? "R" : level === "amber" ? "A" : "G"}</span>
       <span>{flag}</span>
     </div>
   );

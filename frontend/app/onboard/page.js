@@ -55,7 +55,7 @@ export default function OnboardPage() {
 
         {error && (
           <div className="error-state" style={{ marginBottom: 16 }}>
-            ⚠ {error} — navigating to Research with cached data.
+            {error} — navigating to Research with cached data.
           </div>
         )}
 
@@ -119,7 +119,7 @@ export default function OnboardPage() {
           <div style={{ display: "flex", gap: 10, marginTop: 24 }}>
             <button type="submit" className="btn btn-primary btn-lg" disabled={loading} style={{ flex: 1 }}>
               {loading ? <span className="spinner" style={{ width: 16, height: 16 }} /> : null}
-              {loading ? "Saving profile…" : "Continue to Research →"}
+              {loading ? "Saving profile…" : "Continue to Research"}
             </button>
           </div>
         </form>

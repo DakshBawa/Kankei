@@ -12,7 +12,7 @@ async function call(path, opts = {}) {
   });
   if (!r.ok) {
     const body = await r.text().catch(() => "");
-    throw new Error(`${path} → ${r.status}: ${body}`);
+    throw new Error(`${path} ${r.status}: ${body}`);
   }
   return r.json();
 }

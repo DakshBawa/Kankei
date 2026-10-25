@@ -71,15 +71,12 @@ export default function MatchPage() {
     <div className="animate-fadeIn">
       <div className="section-header" style={{ marginBottom: 20 }}>
         <div>
-          <h1 className="section-title" style={{ fontSize: "1.3rem" }}>🤝 Partner Matching</h1>
-          <p style={{ color: "var(--text-secondary)", fontSize: "0.82rem", marginTop: 4 }}>
-            AI-ranked partners by Fit + Trust scores — vetted for Japan experience
-          </p>
+          <h1 className="section-title" style={{ fontSize: "1.3rem" }}>Partner Matching</h1>
         </div>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          <button className="btn btn-outline btn-sm" onClick={() => setShowFilters(!showFilters)}>⚙ Filters</button>
+          <button className="btn btn-outline btn-sm" onClick={() => setShowFilters(!showFilters)}>Filters</button>
           <button className="btn btn-primary btn-sm" onClick={fetchPartners} disabled={loading}>
-            {loading ? <span className="spinner" style={{ width: 14, height: 14 }} /> : "↺"} Re-rank
+            {loading ? <span className="spinner" style={{ width: 14, height: 14 }} /> : ""} Re-rank
           </button>
         </div>
       </div>
@@ -123,7 +120,7 @@ export default function MatchPage() {
               <input type="number" className="form-input" min={1} max={50} value={req.top_n} onChange={e => setReq(r => ({ ...r, top_n: parseInt(e.target.value) || 10 }))} />
             </div>
             <div className="form-group" style={{ display: "flex", alignItems: "flex-end" }}>
-              <button className="btn btn-primary btn-sm w-full" onClick={fetchPartners}>Apply Filters →</button>
+              <button className="btn btn-primary btn-sm w-full" onClick={fetchPartners}>Apply Filters</button>
             </div>
           </div>
         </div>
@@ -253,7 +250,7 @@ export default function MatchPage() {
               {selected.fit_components?.length > 0 && (
                 <div style={{ marginBottom: 16 }}>
                   <div style={{ fontSize: "0.74rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--text-muted)", marginBottom: 10 }}>Fit Score Breakdown</div>
-                  <FactorBreakdown factors={selected.fit_components.map(c => ({ factor: c.name, value: c.score / 100, weight: c.weight, contribution: c.score * c.weight / 100 }))} />
+                  <FactorBreakdown factors={selected.fit_components.map(c => ({ factor: c.name, value: c.score, weight: c.weight, contribution: c.score * c.weight * 100 }))} />
                 </div>
               )}
 

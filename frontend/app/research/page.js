@@ -147,17 +147,14 @@ export default function ResearchPage() {
       {/* Header */}
       <div className="section-header" style={{ marginBottom: 20 }}>
         <div>
-          <h1 className="section-title" style={{ fontSize: "1.3rem" }}>🔭 Market Research Hub</h1>
-          <p style={{ color: "var(--text-secondary)", fontSize: "0.82rem", marginTop: 4 }}>
-            AI-powered state ranking & market intelligence for India market entry
-          </p>
+          <h1 className="section-title" style={{ fontSize: "1.3rem" }}>Market Research Hub</h1>
         </div>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
           <button className="btn btn-outline btn-sm" onClick={() => setShowWeights(!showWeights)}>
             ⚖ {tr("weightSliders")}
           </button>
           <button className="btn btn-primary btn-sm" onClick={fetchRanking} disabled={loading}>
-            {loading ? <span className="spinner" style={{ width: 14, height: 14 }} /> : "↺"} Re-rank
+            {loading ? <span className="spinner" style={{ width: 14, height: 14 }} /> : ""} Re-rank
           </button>
         </div>
       </div>
@@ -209,7 +206,7 @@ export default function ResearchPage() {
             ))}
           </div>
           <button className="btn btn-primary btn-sm" onClick={fetchRanking} disabled={loading} style={{ marginTop: 8 }}>
-            Submit to Backend for Re-ranking →
+            Submit to Backend for Re-ranking
           </button>
         </div>
       )}
@@ -403,7 +400,7 @@ export default function ResearchPage() {
                           {answer.answer}
                         </div>
                         {!answer.grounded && (
-                          <div style={{ fontSize: "0.74rem", color: "var(--tertiary)" }}>⚠ Answer not grounded in corpus — treat as general guidance.</div>
+                          <div style={{ fontSize: "0.74rem", color: "var(--tertiary)" }}>Answer not grounded in corpus — treat as general guidance.</div>
                         )}
                         <Citations citations={answer.citations || []} />
                       </div>
